@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Host dependencies
+        run: pkg-config --exists zlib openssl
       - name: Build, test and example
-        run: make clean all test example
+        run: make clean all test example test-host
       - name: Sanitizers
-        run: make sanitize
+        run: make sanitize sanitize-host

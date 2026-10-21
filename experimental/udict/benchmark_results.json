@@ -1,0 +1,95 @@
+{
+  "repeated_text_1MiB": {
+    "files": 1,
+    "original_bytes": 1048576,
+    "udict_bytes": 6654,
+    "udict_dictionary_terms": 0,
+    "mode_counts": {
+      "deflate": 1,
+      "zdict": 7
+    },
+    "udict_pack_median_ms": 27.85,
+    "udict_verify_median_ms": 3.62,
+    "gzip_bytes": 3117,
+    "xz_bytes": 328,
+    "zstd3_bytes": 152,
+    "comparison_basis": "single file"
+  },
+  "random_512KiB": {
+    "files": 1,
+    "original_bytes": 524288,
+    "udict_bytes": 524487,
+    "udict_dictionary_terms": 0,
+    "mode_counts": {
+      "raw": 4
+    },
+    "udict_pack_median_ms": 21.95,
+    "udict_verify_median_ms": 1.88,
+    "gzip_bytes": 524454,
+    "xz_bytes": 524372,
+    "zstd3_bytes": 524310,
+    "comparison_basis": "single file"
+  },
+  "zeros_1MiB": {
+    "files": 1,
+    "original_bytes": 1048576,
+    "udict_bytes": 262,
+    "udict_dictionary_terms": 0,
+    "mode_counts": {
+      "fill": 8
+    },
+    "udict_pack_median_ms": 13.2,
+    "udict_verify_median_ms": 3.19,
+    "gzip_bytes": 1039,
+    "xz_bytes": 284,
+    "zstd3_bytes": 51,
+    "comparison_basis": "single file"
+  },
+  "source_code_120KiB": {
+    "files": 1,
+    "original_bytes": 122880,
+    "udict_bytes": 15373,
+    "udict_dictionary_terms": 0,
+    "mode_counts": {
+      "deflate": 1
+    },
+    "udict_pack_median_ms": 30.31,
+    "udict_verify_median_ms": 0.53,
+    "gzip_bytes": 8676,
+    "xz_bytes": 7240,
+    "zstd3_bytes": 7973,
+    "comparison_basis": "single file"
+  },
+  "small_files_64": {
+    "files": 64,
+    "original_bytes": 57184,
+    "udict_bytes": 8391,
+    "udict_dictionary_terms": 64,
+    "mode_counts": {
+      "tokens+deflate": 55,
+      "zdict": 9
+    },
+    "udict_pack_median_ms": 32.35,
+    "udict_verify_median_ms": 1.95,
+    "gzip_bytes": 1461,
+    "xz_bytes": 716,
+    "zstd3_bytes": 1153,
+    "comparison_basis": "tar-combined for others"
+  },
+  "modified_versions_16": {
+    "files": 16,
+    "original_bytes": 96198,
+    "udict_bytes": 5610,
+    "udict_dictionary_terms": 64,
+    "mode_counts": {
+      "tokens+deflate": 1,
+      "zdict": 15
+    },
+    "udict_pack_median_ms": 71.98,
+    "udict_verify_median_ms": 1.32,
+    "gzip_bytes": 3886,
+    "xz_bytes": 2960,
+    "zstd3_bytes": 3108,
+    "comparison_basis": "tar-combined for others"
+  }
+}

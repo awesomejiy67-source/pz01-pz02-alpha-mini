@@ -1,0 +1,47 @@
+{
+  "repeated_text_1MiB": {
+    "files": 1,
+    "original": 1048576,
+    "udict_bytes": 7693,
+    "alfa_bytes": 6422,
+    "udict_ms_one_run": 27.58,
+    "alfa_ms_one_run": 9.88,
+    "dictionary_terms": 0
+  },
+  "random_512KiB": {
+    "files": 1,
+    "original": 524288,
+    "udict_bytes": 524482,
+    "alfa_bytes": 525659,
+    "udict_ms_one_run": 21.59,
+    "alfa_ms_one_run": 15.67,
+    "dictionary_terms": 0
+  },
+  "zeros_1MiB": {
+    "files": 1,
+    "original": 1048576,
+    "udict_bytes": 261,
+    "alfa_bytes": 3694,
+    "udict_ms_one_run": 13.2,
+    "alfa_ms_one_run": 6.73,
+    "dictionary_terms": 0
+  },
+  "small_files_64": {
+    "files": 64,
+    "original": 76500,
+    "udict_bytes": 8334,
+    "alfa_bytes": 7896,
+    "udict_ms_one_run": 53.07,
+    "alfa_ms_one_run": 5.89,
+    "dictionary_terms": 64
+  },
+  "modified_versions_16": {
+    "files": 16,
+    "original": 104182,
+    "udict_bytes": 5859,
+    "alfa_bytes": 8295,
+    "udict_ms_one_run": 74.89,
+    "alfa_ms_one_run": 5.05,
+    "dictionary_terms": 64
+  }
+}

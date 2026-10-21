@@ -1,0 +1,17 @@
+{
+  "fifo_open_blocks": true,
+  "grown_source_accepted_over_limit": true,
+  "grow_stats": {
+    "files": 1,
+    "dictionary_terms": 0,
+    "total_input": 1,
+    "archive_size": 156,
+    "modes": {
+      "fill": 1
+    }
+  },
+  "training_candidate_peak": 43691,
+  "candidate_limit_bypassed": true,
+  "pz01_unused_flag_accepted": true,
+  "pz02_compat_unused_flag_accepted": true
+}

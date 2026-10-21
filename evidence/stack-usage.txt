@@ -1,0 +1,7 @@
+GCC -O2 native function frames, not total live call-chain or process RAM.
+src/pz03_page.c:13:17:concentration	544	static
+src/pz03_page.c:18:8:pz03_page_pack	4272	static
+src/pz03_page.c:47:5:pz03_page_info	8	static
+src/pz03_page.c:60:5:pz03_page_unpack	2160	static
+src/pagezip.c:31:8:page_pack	6624	static
+src/pagezip.c:117:5:page_unpack	128	static

@@ -1,0 +1,12 @@
+test_2000_bit_mutations (test_omega.DifferentialTest.test_2000_bit_mutations) ... ok
+test_native_vs_python_reference (test_omega.DifferentialTest.test_native_vs_python_reference) ... ok
+test_cap_and_invalid_row (test_omega.TestOmega.test_cap_and_invalid_row) ... ok
+test_corruption (test_omega.TestOmega.test_corruption) ... ok
+test_random_roundtrip (test_omega.TestOmega.test_random_roundtrip) ... ok
+test_signal (test_omega.TestOmega.test_signal) ... ok
+test_variants (test_omega.TestOmega.test_variants) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.101s
+
+OK

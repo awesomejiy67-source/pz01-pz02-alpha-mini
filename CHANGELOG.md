@@ -1,3 +1,16 @@
+# 2026-10-21 — hardening and experimental PZ03
+
+- Reproduced/fixed blocking FIFO open, source-growth cap bypass, training cap
+  overflow and noncanonical PZ01 flag acceptance; original fixtures retained.
+- PZ02 constant-page fast path, final insertion skip, overlap-copy acceleration.
+- Opt-in bounded PZ03 predictor envelope; lazy header inspection API.
+- New64KiB solid host format, Python reference and native C CLI with staged,
+  checked no-clobber extraction. Zlib/OpenSSL dependencies stated explicitly.
+- Cross-language determinism, corrupt/truncated input and ASan/UBSan gates.
+- Source-linked measurements against original/fixed UDICT, LZ4, Zstd, ZIP,
+  7-Zip fast/normal; narrow wins and substantial remaining losses documented.
+- Imported OMEGA kernels under BSD-2-Clause; project attribution preserved.
+
 # Changelog / История изменений
 
 ## Alpha Mini — public-source release (2026-10-21)

@@ -1,3 +1,31 @@
+# Audited research branch: PZ03 pages + solid host engine
+
+Current results and limitations: [AUDIT-REPORT.md](AUDIT-REPORT.md).
+Format boundaries: [PZ03-FORMATS.md](PZ03-FORMATS.md). Original page API stays
+PZ02; opt-in predictor API is `src/pz03_page.h`. The Linux solid CLI is a
+separate experimental archiver and uses zlib/OpenSSL; it is not the no-heap
+2048-byte UEFI codec. Historical mini-release documentation follows below.
+
+```sh
+make all test example
+make test-host             # Python3, zlib and OpenSSL development packages
+make sanitize sanitize-host
+./build/solid-native pack balanced sample.pzs input1.txt input2.bin
+./build/solid-native verify sample.pzs
+./build/solid-native unpack sample.pzs new-output-directory
+make benchmark             # also needs liblz4/libzstd development headers
+python3 tools/bench_archives.py  # set PZ_7ZIP=/path/to/7zz if not on PATH
+python3 tools/report_results.py
+```
+
+The native solid CLI currently accepts flat ASCII names only. It refuses
+existing outputs and symlinks; raw files are capped at256MiB in total.
+Python `experimental/solid.py` supports UTF8 names. See the format document
+for integrity, durability and metadata limits. The report preserves measured
+losses versus 7-Zip/Zstd/LZ4, rather than claiming a universal win.
+
+---
+
 <div align="center">
 
 # ⚡ PZ01 × PZ02

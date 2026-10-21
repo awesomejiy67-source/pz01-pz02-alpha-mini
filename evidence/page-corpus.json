@@ -1,0 +1,42 @@
+{
+  "zeros": {
+    "bytes": 65536,
+    "pages": 32,
+    "sha256": "cf3e45d6fb14cb523dd14d39fd2a505953de3506d91425b898f9bc18e6c20826"
+  },
+  "noise": {
+    "bytes": 65536,
+    "pages": 32,
+    "sha256": "b25cf141433cabe1df3fa9d5b92bb651db2b4cbba872af238b11e83a715383ed"
+  },
+  "periodic": {
+    "bytes": 65536,
+    "pages": 32,
+    "sha256": "bdf50076bd0a761ca5b278d8236a2517b772b804c08994b3213f2279872fa661"
+  },
+  "small_alphabet": {
+    "bytes": 65536,
+    "pages": 32,
+    "sha256": "b6dcadce73732749998366d4e00ad4c324c8c2d0be7c9a4a4dd87b0063ab41c1"
+  },
+  "row_delta": {
+    "bytes": 65536,
+    "pages": 32,
+    "sha256": "8e3b4a694927da822f9290daf416298497fdfc4268d1abc54a0193da37add0e8"
+  },
+  "source": {
+    "bytes": 7183,
+    "pages": 4,
+    "sha256": "be215ea0085896c4d98aeee6cb92da773b20ef17151d4e0d915ee05c08416c3e"
+  },
+  "documentation": {
+    "bytes": 7723,
+    "pages": 4,
+    "sha256": "7c2114160260975e082e6de6ee50ac5147f64c6efa1af481fba4967c62c52ac1"
+  },
+  "mixed": {
+    "bytes": 96826,
+    "pages": 48,
+    "sha256": "205506b09b3fe4a0edd94bec54c674aec1023705b2380d7ffa11702caa7aa198"
+  }
+}

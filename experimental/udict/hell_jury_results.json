@@ -1,0 +1,47 @@
+{
+  "roundtrip": {
+    "all_bytes": {
+      "input": 5120,
+      "archive": 492,
+      "methods": {
+        "deflate": 1
+      }
+    },
+    "language_tokens": {
+      "input": 4160,
+      "archive": 245,
+      "methods": {
+        "deflate": 1
+      }
+    },
+    "near_variants": {
+      "input": 6144,
+      "archive": 508,
+      "methods": {
+        "deflate": 1
+      }
+    },
+    "random": {
+      "input": 8192,
+      "archive": 8349,
+      "methods": {
+        "raw": 1
+      }
+    },
+    "very_long_fill": {
+      "input": 131073,
+      "archive": 181,
+      "methods": {
+        "fill": 1,
+        "raw": 1
+      }
+    }
+  },
+  "corruption": {
+    "mutations": 12000,
+    "rejected": 12000,
+    "accepted": 0,
+    "unexpected_errors": []
+  },
+  "no_published_on_corruption": true
+}

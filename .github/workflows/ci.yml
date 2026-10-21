@@ -1,0 +1,14 @@
+name: C11 codec tests
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build, test and example
+        run: make clean all test example
+      - name: Sanitizers
+        run: make sanitize

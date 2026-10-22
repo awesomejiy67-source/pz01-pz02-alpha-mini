@@ -1,3 +1,7 @@
+Custom Atom code/pixel codec: [PZA-ASSETS.md](PZA-ASSETS.md),
+[measured results](PZA-REPORT.md). Native no-heap pages, reversible source/x86/BGRA
+profiles and an optional host file/frame tool; default solid profiles unchanged.
+
 The opt-in adaptive solid router retains the balanced prefix winner and tests a second
 candidate selected from separated windows. See [ROUTER-REPORT.md](ROUTER-REPORT.md)
 for old/new measurements, latency costs and the remaining losses to7-Zip.

@@ -2,7 +2,7 @@ CC ?= cc
 AR ?= ar
 CFLAGS ?= -O2 -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation
 INCLUDES = -Isrc
-SRC = src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c
+SRC = src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c src/pza.c
 BUILD = build
 .PHONY: all test sanitize benchmark clean
 
@@ -14,7 +14,7 @@ $(BUILD):
 $(BUILD)/%.o: src/%.c | $(BUILD)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD)/libnano_pz.a: $(BUILD)/pagezip.o $(BUILD)/pz01.o $(BUILD)/checksum.o $(BUILD)/pz03_page.o $(BUILD)/predictor.o
+$(BUILD)/libnano_pz.a: $(BUILD)/pagezip.o $(BUILD)/pz01.o $(BUILD)/checksum.o $(BUILD)/pz03_page.o $(BUILD)/predictor.o $(BUILD)/pza.o
 	$(AR) rcs $@ $^
 
 $(BUILD)/test_codec: $(SRC) tests/test_codec.c | $(BUILD)
@@ -27,6 +27,9 @@ sanitize: | $(BUILD)
 	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/codec-sanitize
 	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer $(INCLUDES) $(SRC) tests/test_pz03_page.c -o $(BUILD)/pz03-sanitize
 	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/pz03-sanitize
+
+	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer $(INCLUDES) $(SRC) tests/test_pza.c -o $(BUILD)/pza-sanitize
+	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/pza-sanitize
 
 benchmark: | $(BUILD)
 	python3 tools/bench_pages.py $(BENCH_ARGS)
@@ -50,14 +53,19 @@ $(BUILD)/solid-native: experimental/native/solid_native.c src/predictor.c | $(BU
 	$(CC) $(CFLAGS) $^ -o $@ -lz -lcrypto
 
 .PHONY: test-pages test-host sanitize-host test-jury
-test-pages: $(BUILD)/test_codec $(BUILD)/test_pz03_page
+test-pages: $(BUILD)/test_codec $(BUILD)/test_pz03_page $(BUILD)/test_pza
 	./$(BUILD)/test_codec
 	./$(BUILD)/test_pz03_page
+	./$(BUILD)/test_pza
+
+$(BUILD)/test_pza: $(SRC) tests/test_pza.c | $(BUILD)
+	$(CC) $(CFLAGS) $(INCLUDES) $(SRC) tests/test_pza.c -o $@
 
 test-host: $(BUILD)/solid-native $(BUILD)/libnano_pz.so
 	python3 -m unittest discover -s experimental/udict/tests -p 'test_*.py'
 	python3 tests/test_solid.py
 	python3 tests/test_native_solid.py
+	python3 tests/test_pza_assets.py
 
 sanitize-host: $(BUILD)/solid-native-v011 $(BUILD)/libnano_pz.so | $(BUILD)
 	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer experimental/native/solid_native.c src/predictor.c -o $(BUILD)/solid-native-sanitize -lz -lcrypto

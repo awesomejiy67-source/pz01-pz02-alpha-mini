@@ -78,3 +78,11 @@ It shares the existing wire format and bounded decoder. The heuristic can miss
 regularity between samples: the documented adversarial case grows from6264 to
 65654 archive bytes. `fast`, `balanced` and `max` retain their full candidate
 paths. LIGHTNING is not a default or a guarantee of better ratio.
+
+## PZA1 and PZAF0001 (Atom assets)
+
+Separate additional formats; see PZA-ASSETS.md. PZA1 decodes legacy pages,
+while previous page decoders cannot read PZA1. PZAF0001 host containers are
+not PZ03SL01 or Atom's internal volatile asset framing. No existing solid
+profile or decoder changed. PZA-REPORT.md contains the new page comparisons;
+previous host archive benchmark remains historical with its pinned inputs.

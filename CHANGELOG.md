@@ -1,3 +1,14 @@
+# 2026-10-22 — PZA1 assets for Atom
+
+- Added bounded no-heap PZA1 pages: frozen64-word source dictionary, reversible
+  E8/E9 filtering and BGR/BGRA colour-plane delta; actual-size PZ02 fallback.
+- Added optional PZAF0001 host file/frame wrapper, SHA checks and no-clobber
+  writes. Original PNG/JPEG files roundtrip exactly; explicit frame command
+  stores only RGB/RGBA8 pixels, rejects quantization/animation.
+- Fast runtime plus offline max search; native/independent tests,60000mutations,
+ 60same-process codec comparisons with measured speed and ratio losses.
+- Same codec integrated in Atomv0.13 for compressed GOP crops and code assets.
+
 # 2026-10-22 — optional adaptive router
 
 - Retained the balanced prefix winner and added a challenger from four

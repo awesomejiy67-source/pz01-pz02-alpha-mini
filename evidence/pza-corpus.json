@@ -1,0 +1,52 @@
+{
+  "c_source": {
+    "raw_bytes": 7183,
+    "pages": 4,
+    "sha256": "be215ea0085896c4d98aeee6cb92da773b20ef17151d4e0d915ee05c08416c3e"
+  },
+  "generated_c": {
+    "raw_bytes": 29180,
+    "pages": 15,
+    "sha256": "52636510c140d1a43982bed0b8c1acab4791d2216b98b7bee45041944de8a0c6"
+  },
+  "x86_calls": {
+    "raw_bytes": 60000,
+    "pages": 30,
+    "sha256": "051952428f73e2f6214dd66870268b765ef14922065578e312ddd7e8bb89e6a0"
+  },
+  "gradient_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "3e6bd9896aca366705bd3cc7dccd18a813dc58e10a3c3725e1381382440f136c"
+  },
+  "sensor_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "7ee06a7ee408d0db9b2fe5bec5acad5f1d41977d989d388317f5e65944e998df"
+  },
+  "noise_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "7b9445be13146c244eb0b418901cad187face9d9e431938d35d36d6d6d01582d"
+  },
+  "png_bytes": {
+    "raw_bytes": 9548,
+    "pages": 5,
+    "sha256": "8712ccce829dfadcbfa1092517703fb1566e858d547963ded245c879db419b17"
+  },
+  "atom_efi_first128KiB": {
+    "raw_bytes": 131072,
+    "pages": 64,
+    "sha256": "0ba57c2e7e36db753baa9457573beeeae5c0e127d76ab322f0633275d4c2f561"
+  },
+  "atom_math_source": {
+    "raw_bytes": 15345,
+    "pages": 8,
+    "sha256": "fa6bb0cfb4eb806d3735d79b98646e442b63c2d0e779ede923a779bd9038e8f3"
+  },
+  "gop_crop_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "925e1f83b180459dde8596fbd5d0e9c1e405637d714710b3d91d8e42517ad023"
+  }
+}

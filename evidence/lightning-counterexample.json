@@ -1,0 +1,1 @@
+{"status": "PASS", "archive_bytes": {"fast": 6264, "lightning": 65654, "balanced": 6264}, "scope": "Opt-in sampling may miss compression; full balanced profile retained, loss explicitly measured"}

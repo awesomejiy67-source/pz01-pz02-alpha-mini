@@ -1,3 +1,9 @@
+Current jury audit: [JURY-REPORT.md](JURY-REPORT.md). New tests reproduce a
+post-publication cleanup defect and verify preservation after injected I/O
+failures. `make test-jury` and `make sanitize-host` exercise these cases.
+`lightning` is an opt-in sampling profile with a measured compression loss on
+adversarial input; choose `balanced` when that tradeoff is unsuitable.
+
 # Audited research branch: PZ03 pages + solid host engine
 
 Current results and limitations: [AUDIT-REPORT.md](AUDIT-REPORT.md).

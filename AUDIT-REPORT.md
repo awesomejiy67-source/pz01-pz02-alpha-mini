@@ -1,6 +1,6 @@
 # PZ hardening + OMEGA integration — measured research report
 
-2026-10-21. Base PZ01/PZ02 commit: d0064614808f24fdd4fab5722f789f7ffc8f0e7c.
+2026-10-22. Base PZ01/PZ02 commit: d0064614808f24fdd4fab5722f789f7ffc8f0e7c.
 PZ03 UDICT source ZIP SHA256: 5cc961e6a12fb282d0bf92c907cfe2bfc1e4667f49f6ca379336cf34af7c0ae6.
 OMEGA source ZIP SHA256: 61670fe37bf154c1dd44efea0d11cd95c927e3766689f449a8d1ee5231c1fe45.
 
@@ -38,32 +38,32 @@ claim to a new mathematical primitive or a replacement for every PZ03 format.
 
 ## Full archives: bytes, pack ms, unpack ms
 
-| lattice_1MiB | udict-original | 131339 | 102.69 | 57.89 |
-| lattice_1MiB | native-balanced | 999 | 8.72 | 8.90 |
-| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.07 | 7.00 |
-| lattice_1MiB | 7z-normal-8MiB | 65482 | 47.86 | 6.01 |
-| lattice_1MiB | tar-zstd3 | 65725 | 6.02 | 5.28 |
-| mixed_files | udict-original | 358403 | 292.96 | 68.65 |
-| mixed_files | native-balanced | 300523 | 41.65 | 15.11 |
-| mixed_files | 7z-fast-1MiB | 276848 | 30.71 | 7.85 |
-| mixed_files | 7z-normal-8MiB | 276629 | 82.30 | 7.46 |
-| mixed_files | tar-zstd3 | 318263 | 7.94 | 5.99 |
-| small_64 | udict-original | 8309 | 112.33 | 105.61 |
-| small_64 | native-balanced | 3226 | 6.56 | 36.78 |
-| small_64 | 7z-fast-1MiB | 1033 | 6.34 | 5.28 |
-| small_64 | 7z-normal-8MiB | 1026 | 7.97 | 4.93 |
-| small_64 | tar-zstd3 | 974 | 5.24 | 5.23 |
-| noise_1MiB | udict-original | 1048830 | 100.69 | 65.13 |
-| noise_1MiB | native-balanced | 1048908 | 86.38 | 9.19 |
-| noise_1MiB | 7z-fast-1MiB | 1048753 | 109.09 | 6.08 |
-| noise_1MiB | 7z-normal-8MiB | 1048753 | 168.20 | 5.36 |
-| noise_1MiB | tar-zstd3 | 1049138 | 11.47 | 9.21 |
+| lattice_1MiB | udict-original | 131339 | 82.94 | 44.21 |
+| lattice_1MiB | native-balanced | 999 | 7.37 | 6.18 |
+| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.87 | 5.87 |
+| lattice_1MiB | 7z-normal-8MiB | 65482 | 43.66 | 5.55 |
+| lattice_1MiB | tar-zstd3 | 65725 | 6.01 | 5.25 |
+| mixed_files | udict-original | 358403 | 274.09 | 69.64 |
+| mixed_files | native-balanced | 300523 | 40.09 | 11.97 |
+| mixed_files | 7z-fast-1MiB | 276848 | 27.09 | 7.24 |
+| mixed_files | 7z-normal-8MiB | 276629 | 78.75 | 8.46 |
+| mixed_files | tar-zstd3 | 318263 | 6.95 | 7.02 |
+| small_64 | udict-original | 8309 | 108.58 | 94.17 |
+| small_64 | native-balanced | 3226 | 6.69 | 49.35 |
+| small_64 | 7z-fast-1MiB | 1033 | 5.75 | 14.52 |
+| small_64 | 7z-normal-8MiB | 1026 | 8.31 | 10.03 |
+| small_64 | tar-zstd3 | 974 | 4.23 | 14.04 |
+| noise_1MiB | udict-original | 1048830 | 94.70 | 49.31 |
+| noise_1MiB | native-balanced | 1048908 | 80.54 | 7.61 |
+| noise_1MiB | 7z-fast-1MiB | 1048753 | 102.66 | 6.01 |
+| noise_1MiB | 7z-normal-8MiB | 1048753 | 159.84 | 4.82 |
+| noise_1MiB | tar-zstd3 | 1049138 | 7.17 | 5.92 |
 
 Three independent CLI runs, median wall time, names and metadata included.
-All210 extractions across70 codec/corpus combinations were checked by exact
+All231 extractions across77 codec/corpus combinations were checked by exact
 name set and SHA256. 7-Zip26.05 LZMA2 single-thread: fast1MiB dictionary, normal
 8MiB dictionary. Also measured ZIP, TAR+Zstd3, Python solid and fixed UDICT;
-complete70-row data and samples are in evidence/archive-benchmark.json.
+complete77-row data and samples are in evidence/archive-benchmark.json.
 Generated/project corpora, not an independent standard competition corpus.
 Durability policies differ: PZ fsync is retained, competitors use defaults;
 small-file extraction cost includes per-file fsync. RSS is child ru_maxrss,

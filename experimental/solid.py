@@ -29,10 +29,18 @@ def transform(raw,row,mode,inverse=False):
  if not fn(raw,out,len(raw),row,mode):raise u.FormatError('invalid native predictor')
  return out.raw
 
+def noise_hint(raw):
+ # Opt-in LIGHTNING heuristic. A full histogram rejects skewed data;
+ # four separated probes reduce prefix-only bias. A miss can lose compression.
+ if len(raw)<16384 or max(collections.Counter(raw).values())>len(raw)//64:return False
+ n=len(raw);sample=b''.join(raw[p:p+1024] for p in (0,n//3,2*n//3,n-1024))
+ return len(u.zlib.compress(sample,1))>=len(sample)-16
+
 def choose(raw,history,profile):
  distance=history.reference(raw)
- mode,payload=u.choose(raw,None,level=1 if profile=='fast' else 3,tail=history.tail,distance=distance)
- if profile=='fast' or mode in (u.FILL,u.REPEAT) or len(raw)<128 or len(raw)%64:return mode,payload
+ if profile=='lightning' and distance is None and noise_hint(raw):return u.RAW,raw
+ mode,payload=u.choose(raw,None,level=1 if profile in ('fast','lightning') else 3,tail=history.tail,distance=distance)
+ if profile in ('fast','lightning') or mode in (u.FILL,u.REPEAT) or len(raw)<128 or len(raw)%64:return mode,payload
  # Probe at most 4096 bytes; balanced tries one complete candidate.
  sample=raw[:4096];modes=[(64,1),(64,2),(64,3),(256,1),(256,2),(256,3)]
  score=[]
@@ -47,7 +55,7 @@ def choose(raw,history,profile):
  return mode,payload
 
 def pack(paths,archive,profile='balanced'):
- if profile not in ('fast','balanced','max'):raise ValueError('invalid profile')
+ if profile not in ('fast','balanced','max','lightning'):raise ValueError('invalid profile')
  paths=[Path(p) for p in paths];archive=Path(archive)
  if not 1<=len(paths)<=u.MAX_FILES:raise ValueError('file count limit')
  if archive.exists() or archive.is_symlink():raise FileExistsError(archive)
@@ -157,7 +165,13 @@ def decode(archive,destination=None,max_output=u.DEFAULT_MAX_OUTPUT):
    if file_left or index!=len(entries):raise u.FormatError('incomplete file boundary')
    endtag,rawdigest,serialized=u.FINAL.unpack(u._read(source,u.FINAL.size))
    if endtag!=u.END_TAG or rawdigest!=rawhash.digest() or serialized!=reader.sha.digest() or source.read(1):raise u.FormatError('solid digest/trailing data mismatch')
-   if scratch:u._fsync_dir(scratch);u._publish_dir(scratch,destination);scratch=None
+   if scratch:
+    u._fsync_dir(scratch)
+    try:u._publish_dir(scratch,destination)
+    except u.PublicationError:
+     scratch=None
+     raise
+    scratch=None
    return {'files':count,'original_bytes':total,'verified':True}
  finally:
   if out is not None and scratch:
@@ -167,7 +181,7 @@ def decode(archive,destination=None,max_output=u.DEFAULT_MAX_OUTPUT):
 
 def main():
  p=argparse.ArgumentParser();s=p.add_subparsers(dest='op',required=True)
- a=s.add_parser('pack');a.add_argument('archive');a.add_argument('files',nargs='+');a.add_argument('--profile',choices=['fast','balanced','max'],default='balanced')
+ a=s.add_parser('pack');a.add_argument('archive');a.add_argument('files',nargs='+');a.add_argument('--profile',choices=['fast','balanced','max','lightning'],default='balanced')
  a=s.add_parser('unpack');a.add_argument('archive');a.add_argument('destination')
  a=s.add_parser('verify');a.add_argument('archive')
  o=p.parse_args()

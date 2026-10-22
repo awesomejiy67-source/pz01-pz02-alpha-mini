@@ -1,3 +1,15 @@
+# 2026-10-22 — strict jury revision
+
+- Fixed deletion through the renamed staging directory fd after parent fsync
+  failure; published files stay intact. Added real link/write/fsync/rename EIO
+  hooks in a separate test executable and before/after reproduction.
+- Added PublicationError ownership handling for both Python decoders.
+- Enforced dictionary-stream FDICT semantics in Python and C.
+- Bounded training consumption before concatenation, including generator input.
+- Added opt-in LIGHTNING noise sampling, cross-language determinism and an
+  explicit compression counterexample; default/full search paths retained.
+- Added433 rehashed structural probes and expanded sanitizer/CI gates.
+
 # 2026-10-21 — hardening and experimental PZ03
 
 - Reproduced/fixed blocking FIFO open, source-growth cap bypass, training cap

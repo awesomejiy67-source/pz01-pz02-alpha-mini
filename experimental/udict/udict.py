@@ -50,6 +50,9 @@ SAMPLE_PER_FILE = 64 * 1024
 MAX_CANDIDATES = 40_000
 
 class FormatError(ValueError): pass
+class PublicationError(OSError):
+    """Publication completed; caller must retain the final destination."""
+    published=True
 
 
 def _read(stream, n):
@@ -123,7 +126,12 @@ def _identity(st):
 
 def train(samples):
     """Limited deterministic heuristic selection; dictionary never guaranteed to win."""
-    data = b''.join(samples)[:MAX_SAMPLE]
+    # Apply the budget while consuming, not after allocating a joined corpus.
+    bounded=bytearray()
+    for sample in samples:
+        bounded.extend(sample[:MAX_SAMPLE-len(bounded)])
+        if len(bounded)==MAX_SAMPLE:break
+    data=bytes(bounded)
     if len(data) < 32 or data.count(data[:1])==len(data):
         return ()
     # Strongly noisy data rarely justifies expensive dictionary mining.
@@ -254,6 +262,8 @@ class Tokenizer:
 
 def _inflate(blob,max_length,prior_tail=None):
     try:
+        if len(blob)<2 or bool(blob[1]&32)!=(prior_tail is not None):
+            raise FormatError('dictionary flag/mode mismatch')
         if prior_tail is not None and not prior_tail:
             raise FormatError('empty dictionary history')
         obj=zlib.decompressobj(zdict=prior_tail) if prior_tail is not None else zlib.decompressobj()
@@ -351,8 +361,11 @@ def _prepare_dict(samples, total_size, *, level=3,max_optimal=512):
 
 def _publish_file(temp,target):
     os.link(temp,target) # atomic create-only; no clobber
-    os.unlink(temp)
-    _fsync_dir(target.parent)
+    try:
+        os.unlink(temp)
+        _fsync_dir(target.parent)
+    except OSError as exc:
+        raise PublicationError("published; cleanup/parent fsync failed; destination may exist") from exc
 
 
 def _fsync_dir(directory):
@@ -374,7 +387,9 @@ def _publish_dir(temp,target):
     if res!=0:
         code=ctypes.get_errno()
         raise OSError(code,os.strerror(code),str(target))
-    _fsync_dir(target.parent)
+    try:_fsync_dir(target.parent)
+    except OSError as exc:
+        raise PublicationError('published; parent fsync failed; destination may exist') from exc
 
 
 def pack(paths, archive, *, mode='balanced'):
@@ -564,7 +579,10 @@ def decode(archive, destination=None, *, max_output=DEFAULT_MAX_OUTPUT, max_arch
                 raise FormatError('archive trailer/hash/trailing bytes invalid')
             if scratch:
                 _fsync_dir(scratch)
-                _publish_dir(scratch,destination)
+                try:_publish_dir(scratch,destination)
+                except PublicationError:
+                    scratch=None
+                    raise
                 scratch=None
             return dict(files=nfiles,original_bytes=size_total,blocks=blocks,dict_terms=len(dictionary),verified=True)
         finally:

@@ -1,0 +1,5 @@
+{
+  "dictionary_mode_without_dictionary_stream_python_accepted": true,
+  "dictionary_mode_without_dictionary_stream_native_accepted": true,
+  "training_chunks_consumed_for_one_sample_budget": 32
+}

@@ -62,11 +62,20 @@ static int zencode(const uint8_t *p,unsigned n,uint8_t *out,size_t *size,int lev
 }
 static int zinflate(const uint8_t *p,unsigned n,uint8_t *out,unsigned expected,int dictionary){
  z_stream z={0};if(inflateInit(&z)!=Z_OK)return failure("inflate init");z.next_in=(Bytef*)p;z.avail_in=n;z.next_out=out;z.avail_out=expected;int status=inflate(&z,Z_FINISH);
+ if(dictionary&&status!=Z_NEED_DICT){inflateEnd(&z);return failure("dictionary stream required");}
  if(status==Z_NEED_DICT&&dictionary){History *h=prior(1);if(h&&h->size>=32768&&inflateSetDictionary(&z,h->bytes+h->size-32768,32768)==Z_OK)status=inflate(&z,Z_FINISH);}
  int ok=status==Z_STREAM_END&&z.total_out==expected&&z.avail_in==0;inflateEnd(&z);return ok?1:failure("invalid compressed block");
 }
 typedef struct {size_t score;unsigned row,mode;} Trial;
 static int cmptrial(const void *a,const void *b){const Trial *x=a,*y=b;if(x->score!=y->score)return x->score<y->score?-1:1;if(x->row!=y->row)return x->row<y->row?-1:1;return x->mode<y->mode?-1:x->mode>y->mode;}
+static int noise_hint(unsigned n){
+ if(n<16384)return 0;unsigned frequency[256]={0};
+ for(unsigned i=0;i<n;i++)frequency[raw[i]]++;
+ for(unsigned i=0;i<256;i++)if(frequency[i]>n/64)return 0;
+ unsigned positions[4]={0,n/3,2*n/3,n-1024};
+ for(unsigned i=0;i<4;i++)memcpy(transformed+1024*i,raw+positions[i],1024);
+ size_t z=0;if(!zencode(transformed,4096,candidate,&z,1,0))return 0;return z>=4080;
+}
 static int emit(unsigned n,unsigned profile){
  unsigned mode=0;size_t chosen=n,z=0;uint32_t crc=(uint32_t)crc32(0,raw,n);memcpy(best,raw,n);
  unsigned i=1;while(i<n&&raw[i]==raw[0])i++;
@@ -74,12 +83,12 @@ static int emit(unsigned n,unsigned profile){
  else {
   unsigned distance=0;for(unsigned d=1;d<=hcount;d++){History *h=prior(d);if(h->size==n&&h->crc==crc&&!memcmp(h->bytes,raw,n)){distance=d;break;}}
   if(distance&&n>=3){mode=5;w16(best,distance);chosen=2;}
-  else {
-   int level=profile?3:1;if(!zencode(raw,n,candidate,&z,level,0))return 0;if(z<chosen){mode=1;chosen=z;memcpy(best,candidate,z);}
+  else if(profile!=3||!noise_hint(n)){
+   int level=(profile==1||profile==2)?3:1;if(!zencode(raw,n,candidate,&z,level,0))return 0;if(z<chosen){mode=1;chosen=z;memcpy(best,candidate,z);}
    if(hcount){if(!zencode(raw,n,candidate,&z,level,1))return 0;if(z<chosen){mode=6;chosen=z;memcpy(best,candidate,z);}}
   }
  }
- if(profile&&mode!=4&&mode!=5&&n>=128&&n%64==0){
+ if((profile==1||profile==2)&&mode!=4&&mode!=5&&n>=128&&n%64==0){
   Trial trials[6];unsigned count=0,sample=n<4096?n:4096;
   for(unsigned row=64;row<=256;row*=4)if(n>=2*row&&n%row==0)for(unsigned pred=1;pred<=3;pred++){
    if(!omega_filter(raw,transformed,sample,row,(int)pred)||!zencode(transformed,sample,candidate,&z,1,0))return failure("predictor probe");trials[count++]=(Trial){z,row,pred};
@@ -167,7 +176,9 @@ static int unpack(const char *archive,const char *target){
  }
  if(file_left||index!=count){failure("incomplete file boundary");goto done;}
  uint8_t footer[65],actual[32];unsigned len=0;if(!read_exact(footer,sizeof(footer),0)||footer[0]!=255||EVP_DigestFinal_ex(raw_hash,actual,&len)!=1||len!=32||memcmp(actual,footer+1,32)||EVP_DigestFinal_ex(wire_hash,actual,&len)!=1||len!=32||memcmp(actual,footer+33,32)||fgetc(stream)!=EOF||ferror(stream)){failure("archive digest/trailing bytes");goto done;}
- if(target){const char *base=strrchr(temp,'/');base=base?base+1:temp;if(fsync(staging)||syscall(SYS_renameat2,dir,base,dir,dest,RENAME_NOREPLACE)||fsync(dir)){failure("publish failed (destination may exist if parent fsync failed)");goto done;}temp[0]=0;}ok=1;
+ if(target){const char *base=strrchr(temp,'/');base=base?base+1:temp;if(fsync(staging)||syscall(SYS_renameat2,dir,base,dir,dest,RENAME_NOREPLACE)){failure("publish failed");goto done;}
+  /* Ownership transferred: never clean through the still-open directory fd. */
+  temp[0]=0;if(fsync(dir)){failure("published; parent fsync failed; destination may exist");goto done;}}ok=1;
 done:
  if(out>=0)close(out);
  if(temp[0]){for(unsigned j=0;j<created;j++){Entry *e=&entries[j];memcpy(filename,metadata+e->off,e->len);filename[e->len]=0;if(staging>=0)unlinkat(staging,filename,0);}rmdir(temp);}
@@ -176,7 +187,7 @@ done:
 int main(int argc,char **argv){
  if(argc<3){fprintf(stderr,"usage: solid-native pack PROFILE ARCHIVE FILE... | unpack ARCHIVE DEST | verify ARCHIVE\n");return 2;}
  if(!hashes()){EVP_MD_CTX_free(wire_hash);EVP_MD_CTX_free(raw_hash);fprintf(stderr,"SHA initialization failed\n");return 2;}int ok=0;
- if(!strcmp(argv[1],"pack")&&argc>=5){unsigned profile;if(!strcmp(argv[2],"fast"))profile=0;else if(!strcmp(argv[2],"balanced"))profile=1;else if(!strcmp(argv[2],"max"))profile=2;else{failure("invalid profile");goto end;}ok=pack(argv[3],argv+4,(unsigned)argc-4,profile);}
+ if(!strcmp(argv[1],"pack")&&argc>=5){unsigned profile;if(!strcmp(argv[2],"fast"))profile=0;else if(!strcmp(argv[2],"balanced"))profile=1;else if(!strcmp(argv[2],"max"))profile=2;else if(!strcmp(argv[2],"lightning"))profile=3;else{failure("invalid profile");goto end;}ok=pack(argv[3],argv+4,(unsigned)argc-4,profile);}
  else if(!strcmp(argv[1],"unpack")&&argc==4)ok=unpack(argv[2],argv[3]);
  else if(!strcmp(argv[1],"verify")&&argc==3)ok=unpack(argv[2],NULL);
  else failure("invalid arguments");

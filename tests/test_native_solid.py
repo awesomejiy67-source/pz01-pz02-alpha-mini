@@ -19,7 +19,7 @@ class Tests(unittest.TestCase):
    d=self.d/str(trial);d.mkdir();items=[]
    for j in range(rnd.randrange(1,10)):
     n=rnd.choice([0,1,2,63,128,1024,8192,32767,65535,65536,65537]);raw=rnd.randbytes(n) if trial%3 else (b'abcd\xff'*(n//5+1))[:n];items.append((f'f{j}.bin',raw))
-   ps=self.paths(items,d);profile=['fast','balanced','max'][trial%3];a=d/'native.pzs';b=d/'python.pzs'
+   ps=self.paths(items,d);profile=['fast','balanced','max','lightning'][trial%4];a=d/'native.pzs';b=d/'python.pzs'
    self.run_native('pack',profile,a,*ps);solid.decode(a,d/'py-out');solid.pack(ps,b,profile);self.run_native('unpack',b,d/'c-out')
    self.assertTrue(all((d/'py-out'/n).read_bytes()==data and (d/'c-out'/n).read_bytes()==data for n,data in items))
    self.assertEqual(a.read_bytes(),b.read_bytes(),'same model and backend should serialize identically');count+=1
@@ -27,7 +27,7 @@ class Tests(unittest.TestCase):
  def test_boundaries_zeros_and_predictors(self):
   rnd=random.Random(2);row=rnd.randbytes(64);raw=b''.join(bytes((v+i)%256 for v in row) for i in range(2048))
   ps=self.paths([('empty',b''),('a',raw),('b',b'\0'*131072),('tail',b'1'),('empty2',b'')]);a=self.d/'a.pzs'
-  for profile in ['fast','balanced','max']:
+  for profile in ['fast','balanced','max','lightning']:
    self.run_native('pack',profile,a,*ps);solid.decode(a,self.d/'out');self.run_native('verify',a);shutil.rmtree(self.d/'out');a.unlink()
  def test_many_empty_files(self):
   ps=self.paths([(f'f{i:03d}',b'') for i in range(512)]);a=self.d/'a.pzs';self.run_native('pack','fast',a,*ps);self.run_native('unpack',a,self.d/'out');self.assertEqual(len(list((self.d/'out').iterdir())),512)

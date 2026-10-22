@@ -1,0 +1,32 @@
+cc -O2 -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation benchmarks/baseline/solid_native-v010.c src/predictor.c tests/io_faults.c -o build/solid-io-v010 -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall
+python3 tests/test_jury.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.238s
+
+OK
+python3 tests/test_io_faults.py
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.059s
+
+OK
+python3 tools/reproduce_publish.py
+{
+  "before": {
+    "returncode": 2,
+    "directory_visible": true,
+    "files": [],
+    "bytes_preserved": false,
+    "stderr": "PZ03 native ERROR: publish failed (destination may exist if parent fsync failed) (errno=2)\n"
+  },
+  "after": {
+    "returncode": 2,
+    "directory_visible": true,
+    "files": [
+      "input"
+    ],
+    "bytes_preserved": true,
+    "stderr": "PZ03 native ERROR: published; parent fsync failed; destination may exist (errno=5)\n"
+  }
+}

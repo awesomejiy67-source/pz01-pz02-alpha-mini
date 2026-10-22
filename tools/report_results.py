@@ -6,7 +6,7 @@ R=pathlib.Path(__file__).resolve().parents[1]
 def read(name):return json.loads((R/'evidence'/name).read_text())
 def main():
  before=read('audit-before.json');after=read('audit-after.json');pages=read('page-benchmark.json');archives=read('archive-benchmark.json');omega=read('omega-reproduced.json')
- assert pages['status']==archives['status']=='PASS' and len(archives['rows'])==70
+ assert pages['status']==archives['status']=='PASS' and len(archives['rows'])==77
  for k in ['fifo_open_blocks','grown_source_accepted_over_limit','candidate_limit_bypassed','pz01_unused_flag_accepted','pz02_compat_unused_flag_accepted']:assert before[k] and not after[k]
  assert after['training_candidate_peak']==40000
  for name,digest in pages['source_sha256'].items():assert hashlib.sha256((R/name).read_bytes()).hexdigest()==digest
@@ -19,7 +19,7 @@ def main():
  table='\n'.join(row(c,k) for c in ['lattice_1MiB','mixed_files','small_64','noise_1MiB'] for k in ['udict-original','native-balanced','7z-fast-1MiB','7z-normal-8MiB','tar-zstd3'])
  report=f'''# PZ hardening + OMEGA integration — measured research report
 
-2026-10-21. Base PZ01/PZ02 commit: d0064614808f24fdd4fab5722f789f7ffc8f0e7c.
+2026-10-22. Base PZ01/PZ02 commit: d0064614808f24fdd4fab5722f789f7ffc8f0e7c.
 PZ03 UDICT source ZIP SHA256: 5cc961e6a12fb282d0bf92c907cfe2bfc1e4667f49f6ca379336cf34af7c0ae6.
 OMEGA source ZIP SHA256: 61670fe37bf154c1dd44efea0d11cd95c927e3766689f449a8d1ee5231c1fe45.
 
@@ -60,10 +60,10 @@ claim to a new mathematical primitive or a replacement for every PZ03 format.
 {table}
 
 Three independent CLI runs, median wall time, names and metadata included.
-All210 extractions across70 codec/corpus combinations were checked by exact
+All231 extractions across77 codec/corpus combinations were checked by exact
 name set and SHA256. 7-Zip26.05 LZMA2 single-thread: fast1MiB dictionary, normal
 8MiB dictionary. Also measured ZIP, TAR+Zstd3, Python solid and fixed UDICT;
-complete70-row data and samples are in evidence/archive-benchmark.json.
+complete77-row data and samples are in evidence/archive-benchmark.json.
 Generated/project corpora, not an independent standard competition corpus.
 Durability policies differ: PZ fsync is retained, competitors use defaults;
 small-file extraction cost includes per-file fsync. RSS is child ru_maxrss,

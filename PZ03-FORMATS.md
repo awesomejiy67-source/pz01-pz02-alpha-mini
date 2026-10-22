@@ -51,3 +51,23 @@ clean up temporary output. Process/power failure can leave temporary directories
 fsync failure after publication can mean the destination already exists. There
 is no general crash recovery journal or archive encryption. Empty files work.
 Names/order are preserved, permissions/timestamps/directories are not archived.
+
+
+## Jury revision, 2026-10-22
+
+The mode6 zlib stream must set FDICT and actually request its preset dictionary;
+Python and C both enforce this. Training consumes at most MAX_SAMPLE bytes
+before joining or scanning further samples. Older valid encoder output is
+compatible; a forged mode6 without FDICT is deliberately refused.
+
+Native extraction transfers cleanup ownership immediately after rename succeeds.
+A later parent-directory fsync error must preserve every published byte. Python
+raises PublicationError and releases the obsolete staging path in the same
+situation. Real write/fsync/link/rename failures are injected in isolated tests.
+
+`lightning` is a new opt-in encode profile. It uses a full-block frequency guard
+and four separated zlib probes before skipping full compression of likely noise.
+It shares the existing wire format and bounded decoder. The heuristic can miss
+regularity between samples: the documented adversarial case grows from6264 to
+65654 archive bytes. `fast`, `balanced` and `max` retain their full candidate
+paths. LIGHTNING is not a default or a guarantee of better ratio.

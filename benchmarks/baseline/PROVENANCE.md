@@ -14,3 +14,7 @@ Do not use it to handle untrusted or changing input.
 The copied historical UDICT benchmark reports under experimental/udict are
 original records, not results for the new native engine. Current evidence is
 under evidence/. All tests generate disposable input in temporary directories.
+
+solid_native-v010.c is exact native solid source from commit
+0897e2d842074580c72125958e3457d29481c11f. It intentionally retains the
+post-rename-fsync cleanup defect for link-time fault reproduction; not for use.

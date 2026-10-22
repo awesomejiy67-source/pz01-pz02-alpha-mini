@@ -1,3 +1,7 @@
+The opt-in adaptive solid router retains the balanced prefix winner and tests a second
+candidate selected from separated windows. See [ROUTER-REPORT.md](ROUTER-REPORT.md)
+for old/new measurements, latency costs and the remaining losses to7-Zip.
+
 Current jury audit: [JURY-REPORT.md](JURY-REPORT.md). New tests reproduce a
 post-publication cleanup defect and verify preservation after injected I/O
 failures. `make test-jury` and `make sanitize-host` exercise these cases.

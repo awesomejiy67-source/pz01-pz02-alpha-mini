@@ -84,16 +84,31 @@ static int emit(unsigned n,unsigned profile){
   unsigned distance=0;for(unsigned d=1;d<=hcount;d++){History *h=prior(d);if(h->size==n&&h->crc==crc&&!memcmp(h->bytes,raw,n)){distance=d;break;}}
   if(distance&&n>=3){mode=5;w16(best,distance);chosen=2;}
   else if(profile!=3||!noise_hint(n)){
-   int level=(profile==1||profile==2)?3:1;if(!zencode(raw,n,candidate,&z,level,0))return 0;if(z<chosen){mode=1;chosen=z;memcpy(best,candidate,z);}
+   int level=(profile==0||profile==3)?1:3;if(!zencode(raw,n,candidate,&z,level,0))return 0;if(z<chosen){mode=1;chosen=z;memcpy(best,candidate,z);}
    if(hcount){if(!zencode(raw,n,candidate,&z,level,1))return 0;if(z<chosen){mode=6;chosen=z;memcpy(best,candidate,z);}}
   }
  }
- if((profile==1||profile==2)&&mode!=4&&mode!=5&&n>=128&&n%64==0){
+ if((profile==1||profile==2||profile==4)&&mode!=4&&mode!=5&&n>=128&&n%64==0){
   Trial trials[6];unsigned count=0,sample=n<4096?n:4096;
   for(unsigned row=64;row<=256;row*=4)if(n>=2*row&&n%row==0)for(unsigned pred=1;pred<=3;pred++){
    if(!omega_filter(raw,transformed,sample,row,(int)pred)||!zencode(transformed,sample,candidate,&z,1,0))return failure("predictor probe");trials[count++]=(Trial){z,row,pred};
   }
-  qsort(trials,count,sizeof(Trial),cmptrial);unsigned limit=profile==1&&count?1:count;
+  qsort(trials,count,sizeof(Trial),cmptrial);unsigned limit=profile!=2&&count?1:count;
+  /* Preserve the prefix winner: adding a challenger cannot enlarge any block.
+   * Separated, row-aligned windows each reset their predictor. Same tie-break
+   * and byte stream as the Python reference; balanced/max/fast/lightning unchanged. */
+  if(profile==4&&count&&n>4096){
+   Trial challenger={SIZE_MAX,0,0};
+   for(unsigned j=0;j<count;j++){
+    Trial t=trials[j];for(unsigned k=0;k<4;k++){
+     unsigned pos=(((n-1024)*k/3)/256)*256;
+     if(!omega_filter(raw+pos,transformed+1024*k,1024,t.row,(int)t.mode))return failure("distributed predictor probe");
+    }
+    if(!zencode(transformed,4096,candidate,&z,1,0))return failure("distributed encode probe");t.score=z;
+    if(cmptrial(&t,&challenger)<0)challenger=t;
+   }
+   if(challenger.row!=trials[0].row||challenger.mode!=trials[0].mode){trials[1]=challenger;limit=2;}
+  }
   for(unsigned j=0;j<limit;j++){Trial t=trials[j];if(!omega_filter(raw,transformed,n,t.row,(int)t.mode)||!zencode(transformed,n,candidate,&z,3,0))return failure("predictor encode");if(z+2<chosen){mode=6+t.mode;chosen=z+2;w16(best,t.row);memcpy(best+2,candidate,z);}}
  }
  uint8_t header[14]={3,(uint8_t)mode};w32(header+2,n);w32(header+6,(uint32_t)chosen);w32(header+10,crc);
@@ -187,7 +202,7 @@ done:
 int main(int argc,char **argv){
  if(argc<3){fprintf(stderr,"usage: solid-native pack PROFILE ARCHIVE FILE... | unpack ARCHIVE DEST | verify ARCHIVE\n");return 2;}
  if(!hashes()){EVP_MD_CTX_free(wire_hash);EVP_MD_CTX_free(raw_hash);fprintf(stderr,"SHA initialization failed\n");return 2;}int ok=0;
- if(!strcmp(argv[1],"pack")&&argc>=5){unsigned profile;if(!strcmp(argv[2],"fast"))profile=0;else if(!strcmp(argv[2],"balanced"))profile=1;else if(!strcmp(argv[2],"max"))profile=2;else if(!strcmp(argv[2],"lightning"))profile=3;else{failure("invalid profile");goto end;}ok=pack(argv[3],argv+4,(unsigned)argc-4,profile);}
+ if(!strcmp(argv[1],"pack")&&argc>=5){unsigned profile;if(!strcmp(argv[2],"fast"))profile=0;else if(!strcmp(argv[2],"balanced"))profile=1;else if(!strcmp(argv[2],"max"))profile=2;else if(!strcmp(argv[2],"lightning"))profile=3;else if(!strcmp(argv[2],"adaptive"))profile=4;else{failure("invalid profile");goto end;}ok=pack(argv[3],argv+4,(unsigned)argc-4,profile);}
  else if(!strcmp(argv[1],"unpack")&&argc==4)ok=unpack(argv[2],argv[3]);
  else if(!strcmp(argv[1],"verify")&&argc==3)ok=unpack(argv[2],NULL);
  else failure("invalid arguments");

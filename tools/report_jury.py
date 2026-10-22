@@ -9,7 +9,7 @@ def main():
  assert b['dictionary_mode_without_dictionary_stream_native_accepted'] and not a['dictionary_mode_without_dictionary_stream_native_accepted']
  assert b['training_chunks_consumed_for_one_sample_budget']==32 and a['training_chunks_consumed_for_one_sample_budget']==1
  assert not pub['cases']['before']['bytes_preserved'] and pub['cases']['after']['bytes_preserved']
- assert bench['status']=='PASS' and len(bench['rows'])==77
+ assert bench['status']=='PASS' and len(bench['rows'])==84
  for n in ['jury-regression.log','jury-sanitize.log','jury-tests.log']:assert 'OK' in (R/'evidence'/n).read_text() and 'FAILED' not in (R/'evidence'/n).read_text()
  def row(case,codec):
   x=next(x for x in bench['rows'] if x['case']==case and x['codec']==codec);return f"| {case} | {codec} | {x['archive_bytes']} | {x['pack_ms']:.2f} | {x['unpack_ms']:.2f} |"
@@ -55,13 +55,15 @@ Python-декодеры также освобождают старый путь 
 |---|---|---:|---:|---:|
 {table}
 
-77 комбинаций,231 распаковка с точным набором имён/SHA256. Имена, исходные
+84 комбинации,252 распаковки с точным набором имён/SHA256. Имена, исходные
 байты, базовые версии и пробы находятся в archive-benchmark.json. Синтетические
 и проектные данные не являются независимым общим чемпионатом. Условия fsync
 различаются; RSS имеет launcher floor. Минимальные требования всего host
 процесса не выводятся из размера статических буферов.
 
-LIGHTNING — новый явный opt-in, без изменения default balanced/старого fast.
+Adaptive — отдельный opt-in с двумя кандидатами; default balanced сохранён.
+Измерения и цена дополнительного анализа — в ROUTER-REPORT.md.
+LIGHTNING — явный opt-in, без изменения default balanced/старого fast.
 Гистограмма всего блока отсеивает смещённое распределение; четыре разнесённые
 пробы позволяют пропускать полный поиск на вероятном шуме. Это эвристика.
 Специально построенный контрпример: balanced/fast{counter['archive_bytes']['balanced']}Б,

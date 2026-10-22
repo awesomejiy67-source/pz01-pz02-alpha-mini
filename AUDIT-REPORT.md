@@ -31,6 +31,9 @@ writes use fast; offline knowledge packing uses max.
 
 A separate PZ03SL01 solid format groups small files across64KiB blocks, holds
 up to512KiB raw history and chooses raw/fill/exact reference/DEFLATE/predictors.
+An opt-in adaptive profile additionally challenges the prefix winner with
+separated probes; balanced/default stays unchanged. See ROUTER-REPORT.md for
+old/new measurements and the extra analysis cost.
 Both Python reference and native Linux C pack/unpack/verify exist. Backend is
 standard zlib, checksums SHA256+CRC32; the predictor kernels come from the
 supplied BSD OMEGA module. This is a combination of known components, not a
@@ -38,32 +41,32 @@ claim to a new mathematical primitive or a replacement for every PZ03 format.
 
 ## Full archives: bytes, pack ms, unpack ms
 
-| lattice_1MiB | udict-original | 131339 | 82.94 | 44.21 |
-| lattice_1MiB | native-balanced | 999 | 7.37 | 6.18 |
-| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.87 | 5.87 |
-| lattice_1MiB | 7z-normal-8MiB | 65482 | 43.66 | 5.55 |
-| lattice_1MiB | tar-zstd3 | 65725 | 6.01 | 5.25 |
-| mixed_files | udict-original | 358403 | 274.09 | 69.64 |
-| mixed_files | native-balanced | 300523 | 40.09 | 11.97 |
-| mixed_files | 7z-fast-1MiB | 276848 | 27.09 | 7.24 |
-| mixed_files | 7z-normal-8MiB | 276629 | 78.75 | 8.46 |
-| mixed_files | tar-zstd3 | 318263 | 6.95 | 7.02 |
-| small_64 | udict-original | 8309 | 108.58 | 94.17 |
-| small_64 | native-balanced | 3226 | 6.69 | 49.35 |
-| small_64 | 7z-fast-1MiB | 1033 | 5.75 | 14.52 |
-| small_64 | 7z-normal-8MiB | 1026 | 8.31 | 10.03 |
-| small_64 | tar-zstd3 | 974 | 4.23 | 14.04 |
-| noise_1MiB | udict-original | 1048830 | 94.70 | 49.31 |
-| noise_1MiB | native-balanced | 1048908 | 80.54 | 7.61 |
-| noise_1MiB | 7z-fast-1MiB | 1048753 | 102.66 | 6.01 |
-| noise_1MiB | 7z-normal-8MiB | 1048753 | 159.84 | 4.82 |
-| noise_1MiB | tar-zstd3 | 1049138 | 7.17 | 5.92 |
+| lattice_1MiB | udict-original | 131339 | 88.51 | 48.88 |
+| lattice_1MiB | native-balanced | 999 | 7.17 | 6.70 |
+| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.22 | 6.69 |
+| lattice_1MiB | 7z-normal-8MiB | 65482 | 43.66 | 7.18 |
+| lattice_1MiB | tar-zstd3 | 65725 | 6.65 | 5.02 |
+| mixed_files | udict-original | 358403 | 281.77 | 69.52 |
+| mixed_files | native-balanced | 300523 | 45.89 | 12.73 |
+| mixed_files | 7z-fast-1MiB | 276848 | 36.67 | 8.50 |
+| mixed_files | 7z-normal-8MiB | 276629 | 86.36 | 12.02 |
+| mixed_files | tar-zstd3 | 318263 | 7.19 | 6.07 |
+| small_64 | udict-original | 8309 | 107.30 | 105.28 |
+| small_64 | native-balanced | 3226 | 7.72 | 52.08 |
+| small_64 | 7z-fast-1MiB | 1033 | 5.41 | 17.04 |
+| small_64 | 7z-normal-8MiB | 1026 | 9.04 | 15.32 |
+| small_64 | tar-zstd3 | 974 | 6.04 | 6.90 |
+| noise_1MiB | udict-original | 1048830 | 103.51 | 46.35 |
+| noise_1MiB | native-balanced | 1048908 | 76.27 | 7.06 |
+| noise_1MiB | 7z-fast-1MiB | 1048753 | 102.87 | 5.58 |
+| noise_1MiB | 7z-normal-8MiB | 1048753 | 130.38 | 6.01 |
+| noise_1MiB | tar-zstd3 | 1049138 | 7.69 | 7.37 |
 
 Three independent CLI runs, median wall time, names and metadata included.
-All231 extractions across77 codec/corpus combinations were checked by exact
+All252 extractions across84 codec/corpus combinations were checked by exact
 name set and SHA256. 7-Zip26.05 LZMA2 single-thread: fast1MiB dictionary, normal
 8MiB dictionary. Also measured ZIP, TAR+Zstd3, Python solid and fixed UDICT;
-complete77-row data and samples are in evidence/archive-benchmark.json.
+complete84-row data and samples are in evidence/archive-benchmark.json.
 Generated/project corpora, not an independent standard competition corpus.
 Durability policies differ: PZ fsync is retained, competitors use defaults;
 small-file extraction cost includes per-file fsync. RSS is child ru_maxrss,

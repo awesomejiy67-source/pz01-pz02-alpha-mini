@@ -41,7 +41,7 @@ def main():
   d=OUT/name;d.mkdir(exist_ok=True)
   for nm,b in files:(d/nm).write_bytes(b)
   expected={nm:hashlib.sha256(b).hexdigest() for nm,b in files}
-  for codec in ['udict-original','udict-fixed','solid-fast','solid-balanced','native-fast','native-balanced','native-lightning','7z-fast-1MiB','7z-normal-8MiB','zip-deflate','tar-zstd3']:jobs.append((name,d,files,expected,codec))
+  for codec in ['udict-original','udict-fixed','solid-fast','solid-balanced','native-fast','native-balanced','native-adaptive','native-lightning','7z-fast-1MiB','7z-normal-8MiB','zip-deflate','tar-zstd3']:jobs.append((name,d,files,expected,codec))
  random.Random(64).shuffle(jobs)
  previous=R/'evidence/archive-benchmark.json'
  if previous.exists() and '--fresh' not in sys.argv:

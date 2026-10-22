@@ -39,7 +39,14 @@ preset dictionary; 7/8/9 delta/delta2/XOR with row u16=64 or256 followed by zlib
 Predictors require at least two full rows. Unsupported modes are refused.
 History contains at most 512 KiB of block bytes. Exact references compare bytes,
 not just hashes. Fast uses DEFLATE level1; balanced/max use level3 and predictors.
-Balanced probes at most4096 bytes and fully encodes one candidate; max up to6.
+The opt-in adaptive profile retains the balanced prefix4096-byte winner and
+challenges it with
+four separated1024-byte windows (each predictor resets at window boundaries).
+At most two full adaptive predictor candidates are encoded; balanced still
+tries one, max still tries up to6.
+The old prefix winner remains eligible, so each block is no larger than with
+the balanced encoder. This is a size property, not a speed guarantee;
+heuristic routing can still miss the best of the other filters.
 All complete candidate payload costs include transformation metadata.
 
 Footer: tag255, SHA256(manifest||raw file bytes in manifest order),

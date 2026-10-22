@@ -41,7 +41,9 @@ def choose(raw,history,profile):
  if profile=='lightning' and distance is None and noise_hint(raw):return u.RAW,raw
  mode,payload=u.choose(raw,None,level=1 if profile in ('fast','lightning') else 3,tail=history.tail,distance=distance)
  if profile in ('fast','lightning') or mode in (u.FILL,u.REPEAT) or len(raw)<128 or len(raw)%64:return mode,payload
- # Probe at most 4096 bytes; balanced tries one complete candidate.
+ # Retain the old prefix winner, then challenge it with separated windows.
+ # Each window resets its predictor; no artificial cross-window differences.
+ # At most two complete adaptive trials; actual serialized size decides.
  sample=raw[:4096];modes=[(64,1),(64,2),(64,3),(256,1),(256,2),(256,3)]
  score=[]
  for row,pred in modes:
@@ -49,13 +51,21 @@ def choose(raw,history,profile):
   filtered=transform(sample,row,pred);score.append((len(u.zlib.compress(filtered,1)),row,pred))
  if not score:return mode,payload
  score.sort();trials=score if profile=='max' else score[:1]
+ if profile=='adaptive' and len(raw)>4096:
+  positions=[((len(raw)-1024)*i//3)//256*256 for i in range(4)]
+  distributed=[]
+  for _,row,pred in score:
+   filtered=b''.join(transform(raw[p:p+1024],row,pred) for p in positions)
+   distributed.append((len(u.zlib.compress(filtered,1)),row,pred))
+  challenger=min(distributed)
+  if challenger[1:]!=trials[0][1:]:trials=trials+[challenger]
  for _,row,pred in trials:
   data=transform(raw,row,pred);candidate=struct.pack('<H',row)+u.zlib.compress(data,3)
   if len(candidate)<len(payload):mode,payload=6+pred,candidate
  return mode,payload
 
 def pack(paths,archive,profile='balanced'):
- if profile not in ('fast','balanced','max','lightning'):raise ValueError('invalid profile')
+ if profile not in ('fast','balanced','max','lightning','adaptive'):raise ValueError('invalid profile')
  paths=[Path(p) for p in paths];archive=Path(archive)
  if not 1<=len(paths)<=u.MAX_FILES:raise ValueError('file count limit')
  if archive.exists() or archive.is_symlink():raise FileExistsError(archive)
@@ -181,7 +191,7 @@ def decode(archive,destination=None,max_output=u.DEFAULT_MAX_OUTPUT):
 
 def main():
  p=argparse.ArgumentParser();s=p.add_subparsers(dest='op',required=True)
- a=s.add_parser('pack');a.add_argument('archive');a.add_argument('files',nargs='+');a.add_argument('--profile',choices=['fast','balanced','max','lightning'],default='balanced')
+ a=s.add_parser('pack');a.add_argument('archive');a.add_argument('files',nargs='+');a.add_argument('--profile',choices=['fast','balanced','max','lightning','adaptive'],default='balanced')
  a=s.add_parser('unpack');a.add_argument('archive');a.add_argument('destination')
  a=s.add_parser('verify');a.add_argument('archive')
  o=p.parse_args()

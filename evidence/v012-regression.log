@@ -1,0 +1,57 @@
+python3 -m unittest discover -s experimental/udict/tests -p 'test_*.py'
+........................
+----------------------------------------------------------------------
+Ran 24 tests in 0.829s
+
+OK
+python3 tests/test_solid.py
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 1.732s
+
+OK
+python3 tests/test_native_solid.py
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 8.158s
+
+OK
+cc -O2 -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation experimental/native/solid_native.c src/predictor.c tests/io_faults.c -o build/solid-io-test -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall
+python3 tests/test_jury.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.243s
+
+OK
+python3 tests/test_io_faults.py
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.044s
+
+OK
+python3 tools/reproduce_publish.py
+{
+  "before": {
+    "returncode": 2,
+    "directory_visible": true,
+    "files": [],
+    "bytes_preserved": false,
+    "stderr": "PZ03 native ERROR: publish failed (destination may exist if parent fsync failed) (errno=2)\n"
+  },
+  "after": {
+    "returncode": 2,
+    "directory_visible": true,
+    "files": [
+      "input"
+    ],
+    "bytes_preserved": true,
+    "stderr": "PZ03 native ERROR: published; parent fsync failed; destination may exist (errno=5)\n"
+  }
+}
+python3 tests/test_router.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.561s
+
+OK
+router: 48 corpora; 24 wins; 24 ties; zero size regressions; 288 file recoveries

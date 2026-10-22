@@ -59,20 +59,25 @@ test-host: $(BUILD)/solid-native $(BUILD)/libnano_pz.so
 	python3 tests/test_solid.py
 	python3 tests/test_native_solid.py
 
-sanitize-host: | $(BUILD)
+sanitize-host: $(BUILD)/solid-native-v011 $(BUILD)/libnano_pz.so | $(BUILD)
 	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer experimental/native/solid_native.c src/predictor.c -o $(BUILD)/solid-native-sanitize -lz -lcrypto
 	PZ_NATIVE_TEST_BINARY="$(CURDIR)/$(BUILD)/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_native_solid.py
 	PZ_NATIVE_TEST_BINARY="$(CURDIR)/$(BUILD)/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_jury.py
+	PZ_NATIVE_TEST_BINARY="$(CURDIR)/$(BUILD)/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_router.py
 	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer experimental/native/solid_native.c src/predictor.c tests/io_faults.c -o $(BUILD)/solid-io-sanitize -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall
 	PZ_IO_TEST_BINARY="$(CURDIR)/$(BUILD)/solid-io-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_io_faults.py
 
 $(BUILD)/solid-io-test: experimental/native/solid_native.c src/predictor.c tests/io_faults.c | $(BUILD)
 	$(CC) $(CFLAGS) $^ -o $@ -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall
 
-test-jury: $(BUILD)/solid-native $(BUILD)/solid-io-test $(BUILD)/solid-io-v010 $(BUILD)/libnano_pz.so
+test-jury: $(BUILD)/solid-native $(BUILD)/solid-io-test $(BUILD)/solid-io-v010 $(BUILD)/solid-native-v011 $(BUILD)/libnano_pz.so
 	python3 tests/test_jury.py
 	python3 tests/test_io_faults.py
 	python3 tools/reproduce_publish.py
+	python3 tests/test_router.py
+
+$(BUILD)/solid-native-v011: benchmarks/baseline/solid_native-v011.c src/predictor.c | $(BUILD)
+	$(CC) $(CFLAGS) $^ -o $@ -lz -lcrypto
 
 $(BUILD)/solid-io-v010: benchmarks/baseline/solid_native-v010.c src/predictor.c tests/io_faults.c | $(BUILD)
 	$(CC) $(CFLAGS) $^ -o $@ -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall

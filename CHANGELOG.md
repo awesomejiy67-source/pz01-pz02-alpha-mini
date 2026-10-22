@@ -1,3 +1,13 @@
+# 2026-10-22 — optional adaptive router
+
+- Retained the balanced prefix winner and added a challenger from four
+  separated, row-aligned windows in the explicit adaptive profile.
+- Kept fast/balanced/max/lightning encoders unchanged: additional analysis
+  costs time and is not enabled by default. Wire format/decoder unchanged.
+- Added48 old/new corpora, C/Python byte equality, previous-decoder cross-reads,
+  interleaved timing and current five-profile sanitizer checks.
+- Documented the24 diagnostic wins,24 ties and the general speed cost.
+
 # 2026-10-22 — strict jury revision
 
 - Fixed deletion through the renamed staging directory fd after parent fsync

@@ -6,7 +6,7 @@ R=pathlib.Path(__file__).resolve().parents[1]
 def read(name):return json.loads((R/'evidence'/name).read_text())
 def main():
  before=read('audit-before.json');after=read('audit-after.json');pages=read('page-benchmark.json');archives=read('archive-benchmark.json');omega=read('omega-reproduced.json')
- assert pages['status']==archives['status']=='PASS' and len(archives['rows'])==77
+ assert pages['status']==archives['status']=='PASS' and len(archives['rows'])==84
  for k in ['fifo_open_blocks','grown_source_accepted_over_limit','candidate_limit_bypassed','pz01_unused_flag_accepted','pz02_compat_unused_flag_accepted']:assert before[k] and not after[k]
  assert after['training_candidate_peak']==40000
  for name,digest in pages['source_sha256'].items():assert hashlib.sha256((R/name).read_bytes()).hexdigest()==digest
@@ -50,6 +50,9 @@ writes use fast; offline knowledge packing uses max.
 
 A separate PZ03SL01 solid format groups small files across64KiB blocks, holds
 up to512KiB raw history and chooses raw/fill/exact reference/DEFLATE/predictors.
+An opt-in adaptive profile additionally challenges the prefix winner with
+separated probes; balanced/default stays unchanged. See ROUTER-REPORT.md for
+old/new measurements and the extra analysis cost.
 Both Python reference and native Linux C pack/unpack/verify exist. Backend is
 standard zlib, checksums SHA256+CRC32; the predictor kernels come from the
 supplied BSD OMEGA module. This is a combination of known components, not a
@@ -60,10 +63,10 @@ claim to a new mathematical primitive or a replacement for every PZ03 format.
 {table}
 
 Three independent CLI runs, median wall time, names and metadata included.
-All231 extractions across77 codec/corpus combinations were checked by exact
+All252 extractions across84 codec/corpus combinations were checked by exact
 name set and SHA256. 7-Zip26.05 LZMA2 single-thread: fast1MiB dictionary, normal
 8MiB dictionary. Also measured ZIP, TAR+Zstd3, Python solid and fixed UDICT;
-complete77-row data and samples are in evidence/archive-benchmark.json.
+complete84-row data and samples are in evidence/archive-benchmark.json.
 Generated/project corpora, not an independent standard competition corpus.
 Durability policies differ: PZ fsync is retained, competitors use defaults;
 small-file extraction cost includes per-file fsync. RSS is child ru_maxrss,

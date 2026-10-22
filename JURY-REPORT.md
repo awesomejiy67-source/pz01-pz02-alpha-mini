@@ -37,26 +37,28 @@ Python-декодеры также освобождают старый путь 
 
 | Данные | Режим | Архив, Б | Упаковка | Распаковка |
 |---|---|---:|---:|---:|
-| noise_1MiB | native-fast | 1048908 | 49.46 | 7.60 |
-| noise_1MiB | native-balanced | 1048908 | 80.54 | 7.61 |
-| noise_1MiB | native-lightning | 1048908 | 10.54 | 7.49 |
-| noise_1MiB | 7z-fast-1MiB | 1048753 | 102.66 | 6.01 |
-| mixed_files | native-fast | 363260 | 26.25 | 15.28 |
-| mixed_files | native-balanced | 300523 | 40.09 | 11.97 |
-| mixed_files | native-lightning | 363623 | 22.58 | 20.82 |
-| mixed_files | 7z-fast-1MiB | 276848 | 27.09 | 7.24 |
-| lattice_1MiB | native-fast | 65897 | 6.66 | 7.19 |
-| lattice_1MiB | native-balanced | 999 | 7.37 | 6.18 |
-| lattice_1MiB | native-lightning | 65897 | 6.53 | 6.85 |
-| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.87 | 5.87 |
+| noise_1MiB | native-fast | 1048908 | 49.28 | 8.69 |
+| noise_1MiB | native-balanced | 1048908 | 76.27 | 7.06 |
+| noise_1MiB | native-lightning | 1048908 | 10.00 | 7.72 |
+| noise_1MiB | 7z-fast-1MiB | 1048753 | 102.87 | 5.58 |
+| mixed_files | native-fast | 363260 | 24.24 | 11.74 |
+| mixed_files | native-balanced | 300523 | 45.89 | 12.73 |
+| mixed_files | native-lightning | 363623 | 16.35 | 12.47 |
+| mixed_files | 7z-fast-1MiB | 276848 | 36.67 | 8.50 |
+| lattice_1MiB | native-fast | 65897 | 7.53 | 6.65 |
+| lattice_1MiB | native-balanced | 999 | 7.17 | 6.70 |
+| lattice_1MiB | native-lightning | 65897 | 6.93 | 7.37 |
+| lattice_1MiB | 7z-fast-1MiB | 65092 | 14.22 | 6.69 |
 
-77 комбинаций,231 распаковка с точным набором имён/SHA256. Имена, исходные
+84 комбинации,252 распаковки с точным набором имён/SHA256. Имена, исходные
 байты, базовые версии и пробы находятся в archive-benchmark.json. Синтетические
 и проектные данные не являются независимым общим чемпионатом. Условия fsync
 различаются; RSS имеет launcher floor. Минимальные требования всего host
 процесса не выводятся из размера статических буферов.
 
-LIGHTNING — новый явный opt-in, без изменения default balanced/старого fast.
+Adaptive — отдельный opt-in с двумя кандидатами; default balanced сохранён.
+Измерения и цена дополнительного анализа — в ROUTER-REPORT.md.
+LIGHTNING — явный opt-in, без изменения default balanced/старого fast.
 Гистограмма всего блока отсеивает смещённое распределение; четыре разнесённые
 пробы позволяют пропускать полный поиск на вероятном шуме. Это эвристика.
 Специально построенный контрпример: balanced/fast6264Б,

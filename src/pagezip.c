@@ -47,6 +47,8 @@ size_t page_pack(const uint8_t*s,unsigned n,uint8_t*d,size_t cap){
   while((1u<<bits)<count)bits++;
   palette_len=17u+count+(((size_t)n*bits+7u)>>3);
  }
+ /* A proven one-symbol palette is already globally minimal for n>=3. */
+ if(count==1 && palette_len<n+16u)goto palette_mode;
  uint16_t head[HASH_COUNT],chain[PAGE_BYTES];/* 6144 bytes scratch; no heap */
  memset(head,0,sizeof(head));
  unsigned at=0;size_t pos=16;
@@ -87,6 +89,8 @@ size_t page_pack(const uint8_t*s,unsigned n,uint8_t*d,size_t cap){
     else{unsigned token=((take-3)<<11)|(bestoff-1);wr16(d+pos,token);pos+=2;}
    }
    unsigned end=at+take;
+   /* No future search can use insertions after the final token. */
+   if(end==n){at=end;continue;}
    while(at<end){
     if(at+2<n){unsigned h=h3(s+at);chain[at]=head[h];head[h]=(uint16_t)(at+1);}
     at++;
@@ -173,11 +177,15 @@ int page_unpack(const uint8_t*s,size_t n,uint8_t*d,unsigned cap,unsigned*size){
     /* Overlap-safe fast paths: memcpy only when source and dest don't overlap. */
     if(off==1u)memset(d+at,d[at-1],len);
     else if(off>=len)memcpy(d+at,d+at-off,len);
-    else for(unsigned j=0;j<len;j++)d[at+j]=d[at+j-off];
+    else {
+     /* Seed once, then double already restored bytes. Each memcpy is disjoint. */
+     memcpy(d+at,d+at-off,off);unsigned made=off;
+     while(made<len){unsigned k=len-made;if(k>made)k=made;memcpy(d+at+made,d+at,k);made+=k;}
+    }
     at+=len;
    }else {if(pos>=n)return 0;d[at++]=s[pos++];}
   }
-  if(s[3]=='2' && bit<8 && (flags>>bit)!=0)return 0;
+  if(bit<8 && (flags>>bit)!=0)return 0;
  }
  if(pos!=n||atom_checksum(d,total)!=rd32(s+8))return 0;
  *size=total;return 1;

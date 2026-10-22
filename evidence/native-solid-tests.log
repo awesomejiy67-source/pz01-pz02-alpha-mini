@@ -1,0 +1,14 @@
+test_all_truncations (test_native_solid.Tests.test_all_truncations) ... ok
+test_boundaries_zeros_and_predictors (test_native_solid.Tests.test_boundaries_zeros_and_predictors) ... ok
+test_corruption_and_atomic_failure (test_native_solid.Tests.test_corruption_and_atomic_failure) ... ok
+test_cross_compatibility_and_byte_determinism (test_native_solid.Tests.test_cross_compatibility_and_byte_determinism) ... ok
+test_fifo_and_size_limits (test_native_solid.Tests.test_fifo_and_size_limits) ... ok
+test_many_empty_files (test_native_solid.Tests.test_many_empty_files) ... ok
+test_no_clobber (test_native_solid.Tests.test_no_clobber) ... ok
+test_paths_and_ascii_limit (test_native_solid.Tests.test_paths_and_ascii_limit) ... ok
+test_rehashed_structural_faults (test_native_solid.Tests.test_rehashed_structural_faults) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 8.721s
+
+OK

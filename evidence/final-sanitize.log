@@ -1,0 +1,6 @@
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c tests/test_codec.c -o build/codec-sanitize
+ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./build/codec-sanitize
+roundtrip=5049 backward_compat=5049 mutations=20196 equivalent_accepted=4 failures=0
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c tests/test_pz03_page.c -o build/pz03-sanitize
+ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./build/pz03-sanitize
+PASS 24000 profile roundtrips; 8000 no-size-regression comparisons; mutations=120000 equivalent_accepted=9 predictive_envelopes=319 legacy_PZ01=616

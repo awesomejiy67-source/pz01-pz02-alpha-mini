@@ -1,0 +1,20 @@
+test_all_empty (test_solid.Tests.test_all_empty) ... ok
+test_all_profiles (test_solid.Tests.test_all_profiles) ... ok
+test_all_truncations (test_solid.Tests.test_all_truncations) ... ok
+test_corruption_and_cleanup (test_solid.Tests.test_corruption_and_cleanup) ... ok
+test_empty_boundaries (test_solid.Tests.test_empty_boundaries) ... ok
+test_exact_history_and_fill (test_solid.Tests.test_exact_history_and_fill) ... ok
+test_failed_write_does_not_publish (test_solid.Tests.test_failed_write_does_not_publish) ... ok
+test_fifo_refused (test_solid.Tests.test_fifo_refused) ... ok
+test_files_cross_blocks (test_solid.Tests.test_files_cross_blocks) ... ok
+test_manifest_hash_and_limits (test_solid.Tests.test_manifest_hash_and_limits) ... ok
+test_native_predictors (test_solid.Tests.test_native_predictors) ... ok
+test_no_clobber (test_solid.Tests.test_no_clobber) ... ok
+test_paths_symlinks_and_collisions (test_solid.Tests.test_paths_symlinks_and_collisions) ... ok
+test_random_roundtrips (test_solid.Tests.test_random_roundtrips) ... ok
+test_source_change_before_compression (test_solid.Tests.test_source_change_before_compression) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.831s
+
+OK

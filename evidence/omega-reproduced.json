@@ -1,0 +1,14 @@
+{
+  "input_bytes": 1048576,
+  "input_sha256": "a5c5edf0248a6a52da8d00193f024228a3741b4c35e9e6637a568f53d18787c1",
+  "zstd_version": "1.5.5",
+  "zstd_bytes": 1048609,
+  "omega_bytes": 4249,
+  "zstd_encode_ms": 0.35444,
+  "omega_encode_ms": 1.5609,
+  "zstd_decode_ms": 0.1354245,
+  "omega_decode_ms": 0.8590465,
+  "runs": 8,
+  "original_source_sha256": "1135d5a0951f296f177913c6049a435cae609145497abb77926061b1f1467a0e",
+  "scope": "Favourable evolving-row synthetic data; original module has full-file Python allocation and different checksum cost. Not a general corpus or the new PZ03SL01 format."
+}

@@ -1,0 +1,9 @@
+{
+  "fifo_open_blocks": false,
+  "grown_source_accepted_over_limit": false,
+  "grow_error": "source changed after discovery",
+  "training_candidate_peak": 40000,
+  "candidate_limit_bypassed": false,
+  "pz01_unused_flag_accepted": false,
+  "pz02_compat_unused_flag_accepted": false
+}

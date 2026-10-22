@@ -1,0 +1,29 @@
+test_bad_tokens (test_udict.TestCodec.test_bad_tokens) ... ok
+test_bitflips_rejected (test_udict.TestCodec.test_bitflips_rejected) ... ok
+test_casefold_duplicates (test_udict.TestCodec.test_casefold_duplicates) ... ok
+test_cross_file_exact_repeat (test_udict.TestCodec.test_cross_file_exact_repeat) ... ok
+test_dangerous_filename_in_archive (test_udict.TestCodec.test_dangerous_filename_in_archive) ... ok
+test_ending_junk (test_udict.TestCodec.test_ending_junk) ... ok
+test_escape_and_overlap (test_udict.TestCodec.test_escape_and_overlap) ... ok
+test_fill_and_ff (test_udict.TestCodec.test_fill_and_ff) ... ok
+test_invalid_header (test_udict.TestCodec.test_invalid_header) ... ok
+test_limits (test_udict.TestCodec.test_limits) ... ok
+test_manual_dictionary_mode (test_udict.TestCodec.test_manual_dictionary_mode) ... ok
+test_mode_selection_length (test_udict.TestCodec.test_mode_selection_length) ... ok
+test_multi_file_shared_dictionary (test_udict.TestCodec.test_multi_file_shared_dictionary) ... ok
+test_names (test_udict.TestCodec.test_names) ... ok
+test_no_clobber (test_udict.TestCodec.test_no_clobber) ... ok
+test_no_temp_dir_after_fail (test_udict.TestCodec.test_no_temp_dir_after_fail) ... ok
+test_optimal_parse_beats_longest_first (test_udict.TestCodec.test_optimal_parse_beats_longest_first) ... ok
+test_random_roundtrips (test_udict.TestCodec.test_random_roundtrips) ... ok
+test_roundtrip_extremes (test_udict.TestCodec.test_roundtrip_extremes) ... ok
+test_symlinks_refused (test_udict.TestCodec.test_symlinks_refused) ... ok
+test_train_reproducible (test_udict.TestCodec.test_train_reproducible) ... ok
+test_truncated (test_udict.TestCodec.test_truncated) ... ok
+test_zdict_selected_in_variants (test_udict.TestCodec.test_zdict_selected_in_variants) ... ok
+test_zlib_bomb_guard (test_udict.TestCodec.test_zlib_bomb_guard) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.894s
+
+OK

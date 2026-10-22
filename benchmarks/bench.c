@@ -17,11 +17,14 @@
 #include <zstd.h>
 #include "pager.h"
 #include "pz01.h"
+#include "pz03_page.h"
+size_t pz02_base_pack(const uint8_t*,unsigned,uint8_t*,size_t);
+int pz02_base_unpack(const uint8_t*,size_t,uint8_t*,unsigned,unsigned*);
 #define MAXP 64
 #define CAP 8192
-#define ENC_LOOPS 3
+#define ENC_LOOPS 5
 #define DEC_LOOPS 101
-#define BATCHES 3
+#define BATCHES 5
 static volatile uint64_t sink = 0;
 static uint64_t now(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (uint64_t)t.tv_sec*1000000000ull+t.tv_nsec;}
 static uint16_t rd16(FILE *f){int a=fgetc(f),b=fgetc(f);if(a<0||b<0){fprintf(stderr,"short page header\n");exit(2);}return (uint16_t)(a|(b<<8));}
@@ -41,6 +44,8 @@ static void close_ctx(const char*codec,CodecContext *ctx){
 }
 static size_t enc(const char *codec,CodecContext *c,Pg *p){
  if(!strcmp(codec,"pz01"))return pz01_pack(p->raw,p->raw_len,p->packed,sizeof(p->packed));
+ if(!strcmp(codec,"pz02-base"))return pz02_base_pack(p->raw,p->raw_len,p->packed,sizeof(p->packed));
+ if(!strncmp(codec,"pz03-",5)){unsigned mode=!strcmp(codec,"pz03-fast")?0:!strcmp(codec,"pz03-balanced")?1:2;return pz03_page_pack(p->raw,p->raw_len,p->packed,sizeof(p->packed),mode);}
  if(!strcmp(codec,"pz02"))return page_pack(p->raw,p->raw_len,p->packed,sizeof(p->packed));
  if(!strcmp(codec,"lz4")){int z=LZ4_compress_default((const char*)p->raw,(char*)p->packed,p->raw_len,CAP);return z>0?(size_t)z:0;}
  if(!strcmp(codec,"zstd1")){size_t z=ZSTD_compressCCtx(c->zc,p->packed,CAP,p->raw,p->raw_len,1);return ZSTD_isError(z)?0:z;}
@@ -53,6 +58,8 @@ static size_t enc(const char *codec,CodecContext *c,Pg *p){
 }
 static int dec(const char *codec,CodecContext *c,Pg *p){
  if(!strcmp(codec,"pz01")){unsigned z=0;return pz01_unpack(p->packed,p->packed_len,p->decoded,sizeof(p->decoded),&z) && z==p->raw_len;}
+ if(!strcmp(codec,"pz02-base")){unsigned z=0;return pz02_base_unpack(p->packed,p->packed_len,p->decoded,sizeof(p->decoded),&z)&&z==p->raw_len;}
+ if(!strncmp(codec,"pz03-",5)){unsigned z=0;return pz03_page_unpack(p->packed,p->packed_len,p->decoded,sizeof(p->decoded),&z)&&z==p->raw_len;}
  if(!strcmp(codec,"pz02")){unsigned z=0;return page_unpack(p->packed,p->packed_len,p->decoded,sizeof(p->decoded),&z) && z==p->raw_len;}
  if(!strcmp(codec,"lz4"))return LZ4_decompress_safe((const char*)p->packed,(char*)p->decoded,p->packed_len,p->raw_len)==(int)p->raw_len;
  if(!strcmp(codec,"zstd1")){size_t z=ZSTD_decompressDCtx(c->zd,p->decoded,p->raw_len,p->packed,p->packed_len);return !ZSTD_isError(z) && z==p->raw_len;}

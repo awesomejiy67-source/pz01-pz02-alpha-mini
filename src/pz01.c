@@ -35,13 +35,14 @@ int pz01_unpack(const uint8_t *s,size_t n,uint8_t *d,unsigned cap,unsigned *size
     if(!s[12]){if(n!=total+16u)return 0;for(;at<total;at++)d[at]=s[pos++];}
     else while(at<total){
         if(pos>=n)return 0;unsigned flags=s[pos++];
-        for(unsigned bit=0;bit<8&&at<total;bit++){
+        unsigned bit=0;for(;bit<8&&at<total;bit++){
             if(flags&(1u<<bit)){
                 if(n-pos<2)return 0;unsigned token=s[pos]|(unsigned)s[pos+1]<<8;pos+=2;
                 unsigned off=(token&2047)+1,len=(token>>11)+3;if(off>at||len>total-at)return 0;
                 for(unsigned j=0;j<len;j++){d[at]=d[at-off];at++;}
             }else {if(pos>=n)return 0;d[at++]=s[pos++];}
         }
+        if(bit<8 && (flags>>bit)!=0)return 0;
     }
     if(pos!=n||atom_checksum(d,total)!=read32(s+8))return 0;*size=total;return 1;
 }

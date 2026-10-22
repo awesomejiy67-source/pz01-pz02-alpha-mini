@@ -1,0 +1,36 @@
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c src/pza.c tests/test_codec.c -o build/codec-sanitize
+ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./build/codec-sanitize
+roundtrip=5049 backward_compat=5049 mutations=20196 equivalent_accepted=4 failures=0
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c src/pza.c tests/test_pz03_page.c -o build/pz03-sanitize
+ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./build/pz03-sanitize
+PASS 24000 profile roundtrips; 8000 no-size-regression comparisons; mutations=120000 equivalent_accepted=9 predictive_envelopes=319 legacy_PZ01=616
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c src/pza.c tests/test_pza.c -o build/pza-sanitize
+ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./build/pza-sanitize
+PASS PZA: roundtrips=20000 mutations=60000 equivalent_accepted=1 code_wins=19 x86_wins=0 BGR_wins=249 BGRA_wins=201
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer experimental/native/solid_native.c src/predictor.c -o build/solid-native-sanitize -lz -lcrypto
+PZ_NATIVE_TEST_BINARY="/workspace/scratch/fc967f21dce2/work/PZ-lab/build/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_native_solid.py
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 20.814s
+
+OK
+PZ_NATIVE_TEST_BINARY="/workspace/scratch/fc967f21dce2/work/PZ-lab/build/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_jury.py
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 4.456s
+
+OK
+PZ_NATIVE_TEST_BINARY="/workspace/scratch/fc967f21dce2/work/PZ-lab/build/solid-native-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_router.py
+.
+----------------------------------------------------------------------
+Ran 1 test in 2.699s
+
+OK
+router: 48 corpora; 24 wins; 24 ties; zero size regressions; 288 file recoveries
+cc -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer experimental/native/solid_native.c src/predictor.c tests/io_faults.c -o build/solid-io-sanitize -lz -lcrypto -Wl,--wrap=fwrite,--wrap=write,--wrap=fsync,--wrap=linkat,--wrap=syscall
+PZ_IO_TEST_BINARY="/workspace/scratch/fc967f21dce2/work/PZ-lab/build/solid-io-sanitize" ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python3 tests/test_io_faults.py
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.155s
+
+OK

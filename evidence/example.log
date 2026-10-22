@@ -1,0 +1,3 @@
+cc -O2 -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation -Isrc src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c examples/quickstart.c -o build/quickstart
+./build/quickstart
+OK: PZ01=40 B, PZ02=40 B, both decode correctly

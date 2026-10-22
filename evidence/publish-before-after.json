@@ -1,0 +1,21 @@
+{
+  "status": "PASS reproduced and fixed",
+  "cases": {
+    "before": {
+      "returncode": 2,
+      "directory_visible": true,
+      "files": [],
+      "bytes_preserved": false,
+      "stderr": "PZ03 native ERROR: publish failed (destination may exist if parent fsync failed) (errno=2)\n"
+    },
+    "after": {
+      "returncode": 2,
+      "directory_visible": true,
+      "files": [
+        "input"
+      ],
+      "bytes_preserved": true,
+      "stderr": "PZ03 native ERROR: published; parent fsync failed; destination may exist (errno=5)\n"
+    }
+  }
+}

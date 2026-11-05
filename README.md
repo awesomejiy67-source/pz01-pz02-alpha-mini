@@ -14,6 +14,10 @@ adversarial input; choose `balanced` when that tradeoff is unsuitable.
 
 # Audited research branch: PZ03 pages + solid host engine
 
+The codec implementations are grouped under [`models/pz`](models/pz) for PZ01,
+PZ02 and PZ03, and [`models/pza`](models/pza) for PZA1. The public C headers
+are under [`src`](src).
+
 Current results and limitations: [AUDIT-REPORT.md](AUDIT-REPORT.md).
 Format boundaries: [PZ03-FORMATS.md](PZ03-FORMATS.md). Original page API stays
 PZ02; opt-in predictor API is `src/pz03_page.h`. The Linux solid CLI is a

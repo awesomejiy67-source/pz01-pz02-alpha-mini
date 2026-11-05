@@ -2,8 +2,9 @@ CC ?= cc
 AR ?= ar
 CFLAGS ?= -O2 -std=c11 -Wall -Wextra -Werror -Wno-misleading-indentation
 INCLUDES = -Isrc
-SRC = src/pagezip.c src/pz01.c src/checksum.c src/pz03_page.c src/predictor.c src/pza.c
+SRC = models/pz/pagezip.c models/pz/pz01.c src/checksum.c models/pz/pz03_page.c src/predictor.c models/pza/pza.c
 BUILD = build
+OBJECTS = $(SRC:%.c=$(BUILD)/%.o)
 .PHONY: all test sanitize benchmark clean
 
 all: $(BUILD)/test_codec $(BUILD)/libnano_pz.a
@@ -11,10 +12,11 @@ all: $(BUILD)/test_codec $(BUILD)/libnano_pz.a
 $(BUILD):
 	mkdir -p $(BUILD)
 
-$(BUILD)/%.o: src/%.c | $(BUILD)
+$(BUILD)/%.o: %.c
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD)/libnano_pz.a: $(BUILD)/pagezip.o $(BUILD)/pz01.o $(BUILD)/checksum.o $(BUILD)/pz03_page.o $(BUILD)/predictor.o $(BUILD)/pza.o
+$(BUILD)/libnano_pz.a: $(OBJECTS)
 	$(AR) rcs $@ $^
 
 $(BUILD)/test_codec: $(SRC) tests/test_codec.c | $(BUILD)

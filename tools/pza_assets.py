@@ -80,7 +80,10 @@ def main():
  a=s.add_parser('pack');a.add_argument('source');a.add_argument('archive');a.add_argument('--kind',choices=['auto','bytes','code','x86','bgr','bgra'],default='auto');a.add_argument('--effort',choices=['fast','max'],default='fast')
  a=s.add_parser('frame');a.add_argument('image');a.add_argument('archive');a.add_argument('--effort',choices=['fast','max'],default='fast')
  a=s.add_parser('unpack');a.add_argument('archive');a.add_argument('output');a.add_argument('--png',action='store_true')
- a=s.add_parser('info');a.add_argument('archive');o=p.parse_args()
+ a=s.add_parser('info');a.add_argument('archive')
+ a=s.add_parser('verify', help='check archive integrity without extracting a file')
+ a.add_argument('archive')
+ o=p.parse_args()
  if o.op=='pack':
   raw=read_bounded(o.source);suffix=pathlib.Path(o.source).suffix.lower();kind={'bytes':0,'code':1,'x86':2,'bgr':3,'bgra':4}.get(o.kind)
   if kind is None:kind=1 if suffix in ['.c','.h','.py','.lua','.ns','.nanoscript'] else 2 if suffix in ['.efi','.exe'] else 0
@@ -96,8 +99,13 @@ def main():
   blob=pack_data(raw,4,w,h,effort=o.effort)
  else:
   # Limit wire reads before allocating/decompressing attacker-controlled data.
-  blob=read_bounded(o.archive,MAX_RAW+4*((MAX_RAW+2045)//2046)+HEADER.size+32)
-  raw,meta=unpack_data(blob)
+  try:
+   blob=read_bounded(o.archive,MAX_RAW+4*((MAX_RAW+2045)//2046)+HEADER.size+32)
+   raw,meta=unpack_data(blob)
+  except (OSError, ValueError) as error:
+   if o.op == 'verify':
+    p.exit(1, f'PZA verification failed: {error}\n')
+   raise
   if o.op=='unpack':
    if o.png:
     if not meta['frame']:raise ValueError('PNG requires a frame asset')

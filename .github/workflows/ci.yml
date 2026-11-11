@@ -11,6 +11,6 @@ jobs:
       - name: Host dependencies
         run: pkg-config --exists zlib openssl
       - name: Build, test and example
-        run: make clean all test example test-host test-jury
+        run: make clean all test example test-host test-jury test-build
       - name: Sanitizers
         run: make sanitize sanitize-host

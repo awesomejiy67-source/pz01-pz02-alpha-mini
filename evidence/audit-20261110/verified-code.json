@@ -1,0 +1,22 @@
+{
+  "baseline_commit": "455106542aa610635c2e01c05a11d214c94a611d",
+  "verified_code_commit": "c9dacde3933877c3b0f921ba83b2c830e83520e8",
+  "codec_source_sha256": {
+    "models/pz/pagezip.c": "52d6d2386752b9d496a854bf7aa051e0a387646fe3b699d147e5be2dfc07baf5",
+    "models/pz/pz01.c": "f0618c4679c694a73825265bb7560121e04eb66effbab63875f4d20cf73eaa0e",
+    "src/checksum.c": "22c19bedc14399aeac9e63e66cbe4e3fb093d36b03cd125153a26cd297b21f91",
+    "models/pz/pz03_page.c": "b0fd5941b336bebb05a57be262b643e2e393753797d527c43cf688b11aa9ad69",
+    "src/predictor.c": "e3a8a973ba0b389ab01f6e4131db2c76b6d90d552a0b517ee422b7e8b7c56c1e",
+    "models/pza/pza.c": "e2b0c943232789ab6364177ef6f827ccff52c29a886a98fb7cae73558a88c4a8"
+  },
+  "note": "Production source hashes exactly match final built/tested code. Report and evidence are committed subsequently.",
+  "codec_git_blob_sha256": {
+    "models/pz/pagezip.c": "18444658043032a112236d36dbbe3ee6d0d1583db65862e08e72842c4d3c63ad",
+    "models/pz/pz01.c": "6a4946ff7aeab5cae9cc03285eb25f813d8f8d01b91206e950055984477174e8",
+    "src/checksum.c": "e7866f2f9c9ccd96ab63165e6fdba1c958b8353f25d98fdec7c648aaf25a8724",
+    "models/pz/pz03_page.c": "d41bcd4223dff57135e3bab21d0e4b30eb3ca7c08b27bc0a84dac9e6fb8c590d",
+    "src/predictor.c": "a87aa39ed89226d6919e0a0ca508ec25c0731cc8de0bd810f30641a6c4eb34e6",
+    "models/pza/pza.c": "d15612b86c074d281533dc01fa6be88a3d6c00eef7f15f3fc3d92e7d9e77ed3a"
+  },
+  "line_endings": "compiled source hashes describe the actual Windows checkout; git blob hashes identify committed LF sources"
+}

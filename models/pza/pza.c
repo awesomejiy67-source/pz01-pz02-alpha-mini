@@ -54,7 +54,9 @@ size_t pza_filter(const uint8_t *s,unsigned n,uint8_t *d,size_t cap,unsigned kin
  }return n;
 }
 int pza_unfilter(const uint8_t *s,unsigned n,uint8_t *d,unsigned total,unsigned kind){
- if(!s||!d||!n||n>PAGE_BYTES||!total||total>PAGE_BYTES)return 0;
+ /* The standalone source filter can escape every byte, doubling its size.
+  * Page envelopes still restrict their filtered payload to PAGE_BYTES. */
+ if(!s||!d||!n||n>(kind==1?2u*PAGE_BYTES:PAGE_BYTES)||!total||total>PAGE_BYTES)return 0;
  if(kind==1){
   unsigned i=0,at=0;
   while(i<n){unsigned c=s[i++];if(c!=255){if(at==total)return 0;d[at++]=(uint8_t)c;continue;}
@@ -76,6 +78,9 @@ size_t pza_pack(const uint8_t *s,unsigned n,uint8_t *d,size_t cap,unsigned kind)
  size_t best=page_pack(s,n,d,cap);if(!best||!kind||n<32||best<=34)return best;
  uint8_t transformed[PAGE_BYTES],candidate[PAGE_PACKED];
  size_t filtered=pza_filter(s,n,transformed,sizeof(transformed),kind);if(!filtered)return best;
+ /* An identity transform would repeat exactly the PZ02 encode just done;
+  * neither its direct payload nor an extra envelope can beat that result. */
+ if(filtered==n&&!memcmp(s,transformed,n))return best;
  size_t packed=page_pack(transformed,(unsigned)filtered,candidate,sizeof(candidate));if(!packed)return best;
  unsigned method=1;const uint8_t *payload=candidate;
  if(filtered<=packed){packed=filtered;method=0;payload=transformed;}

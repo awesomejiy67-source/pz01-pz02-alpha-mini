@@ -1,13 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-only
 """Same-process native asset pages; input hashes, ratio/time wins AND losses."""
-import argparse,hashlib,io,json,pathlib,random,struct,subprocess,sys
+import argparse,hashlib,io,json,os,pathlib,random,shlex,struct,subprocess,sys
 R=pathlib.Path(__file__).resolve().parents[1]
 def main():
- p=argparse.ArgumentParser();p.add_argument('--atom',type=pathlib.Path);o=p.parse_args();B=R/'build';D=B/'pza-corpus';D.mkdir(parents=True,exist_ok=True)
- cmd=['cc','-O2','-std=c11','-Isrc','-I'+str(R.parent.parent/'toolchain/codec-headers')]
+ p=argparse.ArgumentParser();p.add_argument('--atom',type=pathlib.Path);p.add_argument('--header-dir',action='append',default=[]);p.add_argument('--versioned-libs',action='store_true');p.add_argument('--output-dir',type=pathlib.Path,default=R/'evidence');o=p.parse_args();B=R/'build';D=B/'pza-corpus';D.mkdir(parents=True,exist_ok=True);o.output_dir.mkdir(parents=True,exist_ok=True)
+ cmd=[*shlex.split(os.environ.get('CC','cc')),'-O2','-std=c11','-Isrc',*['-I'+str(pathlib.Path(p).resolve()) for p in o.header_dir]]
  subprocess.run([*cmd,'-Dpage_pack=pz02_base_pack','-Dpage_unpack=pz02_base_unpack','-c','benchmarks/baseline/pagezip.c','-o','build/pza-base.o'],cwd=R,check=True)
- sources=['src/'+s+'.c' for s in ['pagezip','pz01','checksum','pz03_page','predictor','pza']]
- subprocess.run([*cmd,*sources,'build/pza-base.o','benchmarks/bench_pza.c','-o','build/bench-pza','-lz','-l:liblz4.so.1','-l:libzstd.so.1'],cwd=R,check=True)
+ sources=['models/pz/pagezip.c','models/pz/pz01.c','src/checksum.c','models/pz/pz03_page.c','src/predictor.c','models/pza/pza.c']
+ libs=['-lz','-l:liblz4.so.1','-l:libzstd.so.1'] if o.versioned_libs else ['-lz','-llz4','-lzstd']
+ libs=shlex.split(os.environ['PZ_BENCH_LIBS']) if 'PZ_BENCH_LIBS' in os.environ else libs
+ binary=B/('bench-pza.exe' if os.name=='nt' else 'bench-pza')
+ subprocess.run([*cmd,*sources,'build/pza-base.o','benchmarks/bench_pza.c','-o',str(binary),*libs],cwd=R,check=True)
  rng=random.Random(913130);cases={}
  cases['c_source']=((R/'benchmarks/baseline/pagezip.c').read_bytes(),'pza-code')
  cases['generated_c']=(b''.join(f'unsigned value_{i}; return atom_eval(value_{i});\n'.encode() for i in range(600)),'pza-code')
@@ -34,10 +37,10 @@ def main():
   for codec in ['pz02','pz03-max',profile,'lz4','zstd1','zlib1']:jobs.append((name,codec))
  random.Random(7423).shuffle(jobs);rows=[]
  for name,codec in jobs:
-  values=subprocess.check_output([str(B/'bench-pza'),codec,name,str(D/(name+'.pgs'))],text=True).strip().split('\t');keys=['case','codec','pages','raw_bytes','packed_bytes','encode_ns','decode_ns','encoder_context_bytes','decoder_context_bytes'];row=dict(zip(keys,values))
+  values=subprocess.check_output([str(binary),codec,name,str(D/(name+'.pgs'))],text=True).strip().split('\t');keys=['case','codec','pages','raw_bytes','packed_bytes','encode_ns','decode_ns','encoder_context_bytes','decoder_context_bytes'];row=dict(zip(keys,values))
   for k in keys[2:]:row[k]=float(row[k]) if k.endswith('_ns') else int(row[k])
   rows.append(row)
- report={'status':'PASS','rows':rows,'input_provenance':provenance,'source_sha256':{n:hashlib.sha256((R/n).read_bytes()).hexdigest() for n in [*sources,'benchmarks/bench_pza.c','tools/bench_pza.py']},'binary_sha256':hashlib.sha256((B/'bench-pza').read_bytes()).hexdigest(),
+ report={'status':'PASS','rows':rows,'input_provenance':provenance,'source_sha256':{n:hashlib.sha256((R/n).read_bytes()).hexdigest() for n in [*sources,'benchmarks/bench_pza.c','tools/bench_pza.py']},'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),
   'method':'Same-process C,5batches;5encode/101decode loops; median; every initial output byte compared. Independent <=2048byte pages. PZ FNV32, zlib Adler32; zstd checksum off, rawLZ4 no checksum. Unequal integrity costs. Generated/project data, no camera-photo corpus and no claim of universal superiority. Context sizes exclude stack/process/libraries.'}
- (R/'evidence/pza-corpus.json').write_text(json.dumps(manifest,indent=2)+'\n');(R/'evidence/pza-benchmark.json').write_text(json.dumps(report,indent=2)+'\n');print('PASS',len(rows),'asset codec comparisons')
+ (o.output_dir/'pza-corpus.json').write_text(json.dumps(manifest,indent=2)+'\n');(o.output_dir/'pza-benchmark.json').write_text(json.dumps(report,indent=2)+'\n');print('PASS',len(rows),'asset codec comparisons')
 if __name__=='__main__':main()

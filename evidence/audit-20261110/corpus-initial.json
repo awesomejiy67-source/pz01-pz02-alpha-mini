@@ -1,0 +1,128 @@
+{
+  "project_pagezip": {
+    "bytes": 7582,
+    "sha256": "18444658043032a112236d36dbbe3ee6d0d1583db65862e08e72842c4d3c63ad",
+    "source": "baseline 455106542aa610635c2e01c05a11d214c94a611d",
+    "split": "tuning",
+    "kind": 1
+  },
+  "project_pz01": {
+    "bytes": 2528,
+    "sha256": "6a4946ff7aeab5cae9cc03285eb25f813d8f8d01b91206e950055984477174e8",
+    "source": "baseline 455106542aa610635c2e01c05a11d214c94a611d",
+    "split": "tuning",
+    "kind": 1
+  },
+  "project_pza": {
+    "bytes": 7130,
+    "sha256": "b013827825270b7ee79e70829dd73761cf0a15994455f24bd5046a50472198c1",
+    "source": "baseline 455106542aa610635c2e01c05a11d214c94a611d",
+    "split": "validation",
+    "kind": 1
+  },
+  "project_text": {
+    "bytes": 10222,
+    "sha256": "9a69a1be44d93247f6e4ab8b4a6fe6526eecb8ac7b6525638e21cb1e0b09daa4",
+    "source": "baseline README.md",
+    "split": "validation",
+    "kind": 1
+  },
+  "independent_c": {
+    "bytes": 65536,
+    "sha256": "5ec427cd5189eede746602286706b6061115e00a35cf393c3dcb86fc846f8923",
+    "source": "lz4 v1.10.0 BSD source",
+    "split": "validation",
+    "kind": 1
+  },
+  "independent_cpp": {
+    "bytes": 21645,
+    "sha256": "b1b9d2ca13098dc8dfea5a784431db303658b460c7a21dee963bbc5e3981621c",
+    "source": "zstd v1.5.7 BSD source",
+    "split": "validation",
+    "kind": 1
+  },
+  "independent_text": {
+    "bytes": 5317,
+    "sha256": "d106dcdb2a0b3087cb3a2380b9f00a0bbadc7eb835cd80408f94a2d78d69727d",
+    "source": "zlib v1.3.1 README",
+    "split": "validation",
+    "kind": 1
+  },
+  "executable": {
+    "bytes": 65536,
+    "sha256": "dcd3d357b260eab3baedc561dd3239bb267b9588a541a02406c9a2e66e65b2ba",
+    "source": "locally compiled baseline quickstart PE",
+    "split": "validation",
+    "kind": 2
+  },
+  "uniform_noise": {
+    "bytes": 65536,
+    "sha256": "c543d08bbbb38ffc3de682aba31697271b4b8ca0e0c412f5885cef9ec16c64c3",
+    "source": "MT19937 seed 20261110",
+    "split": "validation",
+    "kind": 4
+  },
+  "zeros": {
+    "bytes": 65536,
+    "sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31",
+    "source": "generated",
+    "split": "tuning",
+    "kind": 4
+  },
+  "periodic": {
+    "bytes": 65536,
+    "sha256": "b897b3496baddd7cda8b8d48aaadc5c757a26201e21c4bfbff3ec3f870a97088",
+    "source": "generated",
+    "split": "tuning",
+    "kind": 1
+  },
+  "bgra_noise_0": {
+    "bytes": 65536,
+    "sha256": "9a29ee145eca538172dc1c94b1eccac3cf0f50e158e5c95ab4a1ee1a52d0efe5",
+    "source": "generated structured BGRA; seed 20261110",
+    "split": "validation",
+    "kind": 4
+  },
+  "bgra_noise_5": {
+    "bytes": 65536,
+    "sha256": "a88fef53a6fead49b2b4ceb9a09412acfe544072680f147a6c15267258f2722e",
+    "source": "generated structured BGRA; seed 20261110",
+    "split": "validation",
+    "kind": 4
+  },
+  "bgra_noise_25": {
+    "bytes": 65536,
+    "sha256": "f6af9c4e4ab95ddfe39333c1e62c69407f490196def88cf4f01c48705e40719d",
+    "source": "generated structured BGRA; seed 20261110",
+    "split": "validation",
+    "kind": 4
+  },
+  "bgra_noise_75": {
+    "bytes": 65536,
+    "sha256": "405b995fcef434ec17066d8fcd58a8df486c55469346c81935b852fb93654d55",
+    "source": "generated structured BGRA; seed 20261110",
+    "split": "validation",
+    "kind": 4
+  },
+  "png": {
+    "bytes": 42580,
+    "sha256": "20925bb8072fbe006b6bdfac1186b17e4ee2c43016ff906e4f4eaf212f1b911c",
+    "source": "generated PNG/RGBA container; Python zlib 1.3.1.zlib-ng",
+    "split": "validation",
+    "kind": 1
+  },
+  "zip": {
+    "bytes": 16733,
+    "sha256": "f4c9c8bbf70edf4073f79d1dde34660a8e3cb453ec19305eb6ef73b0cac98ac4",
+    "source": "ZIP of pinned LZ4 source",
+    "split": "validation",
+    "kind": 1
+  },
+  "mixed": {
+    "bytes": 61599,
+    "sha256": "9605754ac31927713238b9cb5506c1eedfac373e3157f3c4a4c921e7dd8bc7c8",
+    "source": "fixed slices of named corpus members",
+    "split": "validation",
+    "kind": 1
+  }
+}

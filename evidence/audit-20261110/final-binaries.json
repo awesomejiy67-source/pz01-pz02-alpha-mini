@@ -1,0 +1,10 @@
+{
+  "baseline": {
+    "sha256": "5abdc67b29bfb329d451ab035870f6aeb9d5f3ecd61d5e20b4a9431b2e335122",
+    "bytes": 62976
+  },
+  "final": {
+    "sha256": "a99b8c205ee37138eb38713301a23986e54f53209887fbe6d4e31ca264dbb45e",
+    "bytes": 62976
+  }
+}

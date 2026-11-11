@@ -15,7 +15,9 @@ size_t pza_pack(const uint8_t *,unsigned,uint8_t *,size_t,unsigned);
 int pza_unpack(const uint8_t *,size_t,uint8_t *,unsigned,unsigned *);
 int pza_info(const uint8_t *,size_t,unsigned *);
 /* Exposed reversible transforms for independent tests; dictionary is frozen
- * by format version PZA1. Unknown kinds fail. No image decoding or resizing. */
+ * by format version PZA1. Unknown kinds fail. No image decoding or resizing.
+ * Source filtering (kind 1) needs up to 2*raw bytes for literal-255 escapes;
+ * the standalone inverse accepts that bound. Page payloads remain <=2048. */
 size_t pza_filter(const uint8_t *,unsigned,uint8_t *,size_t,unsigned);
 int pza_unfilter(const uint8_t *,unsigned,uint8_t *,unsigned,unsigned);
 #endif

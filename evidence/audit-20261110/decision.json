@@ -1,0 +1,14 @@
+{
+  "wire_identical": true,
+  "size_regressions": [],
+  "pza_validation_encode_geomean_ratio": 0.9721568082720133,
+  "pza_worst_encode_regression_percent": 3.3382379786080385,
+  "pza_worst_decode_regression_percent": 9.085165049397848,
+  "pza_best_encode_change_percent": -46.74413690064914,
+  "code_text_bytes": {
+    "baseline": 12574,
+    "final": 12622
+  },
+  "max_frame_growth": 0,
+  "performance_accept": true
+}

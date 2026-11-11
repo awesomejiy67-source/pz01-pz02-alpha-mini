@@ -1,0 +1,51 @@
+{
+  "base": "455106542aa610635c2e01c05a11d214c94a611d",
+  "head": "455106542aa610635c2e01c05a11d214c94a611d",
+  "os": "Windows-10-10.0.17763-SP0",
+  "python": "3.14.10 (tags/v3.14.10:b703b2c, Oct 25 2026, 17:36:52) [MSC v.1944 64 bit (AMD64)]",
+  "cpu": "Intel64 Family 6 Model 58 Stepping 9, GenuineIntel",
+  "flags": [
+    "-O2",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation"
+  ],
+  "compiler": "clang version 23.1.5 (https://github.com/llvm/llvm-project.git 392dfff97d29b59d77e5cac6d4b6ef2585fe7117)\nTarget: x86_64-w64-windows-gnu\nThread model: posix\nInstalledDir: C:/Users/vdsgfhv/Desktop/\u041d\u043e\u0432\u0430\u044f \u043f\u0430\u043f\u043a\u0430 (12)/.audit-tools/llvm/llvm-mingw-20261104-ucrt-x86_64/bin\nConfiguration file: C:/Users/vdsgfhv/Desktop/\u041d\u043e\u0432\u0430\u044f \u043f\u0430\u043f\u043a\u0430 (12)/.audit-tools/llvm/llvm-mingw-20261104-ucrt-x86_64/bin/x86_64-w64-windows-gnu.cfg\n",
+  "source_sha256": {
+    "models/pz/pagezip.c": "18444658043032a112236d36dbbe3ee6d0d1583db65862e08e72842c4d3c63ad",
+    "models/pz/pz01.c": "6a4946ff7aeab5cae9cc03285eb25f813d8f8d01b91206e950055984477174e8",
+    "src/checksum.c": "e7866f2f9c9ccd96ab63165e6fdba1c958b8353f25d98fdec7c648aaf25a8724",
+    "models/pz/pz03_page.c": "d41bcd4223dff57135e3bab21d0e4b30eb3ca7c08b27bc0a84dac9e6fb8c590d",
+    "src/predictor.c": "a87aa39ed89226d6919e0a0ca508ec25c0731cc8de0bd810f30641a6c4eb34e6",
+    "models/pza/pza.c": "b013827825270b7ee79e70829dd73761cf0a15994455f24bd5046a50472198c1"
+  },
+  "dependencies": {
+    "lz4": {
+      "url": "https://codeload.github.com/lz4/lz4/zip/refs/tags/v1.10.0",
+      "sha256": "3224b4c80f351f194984526ef396f6079bd6332dd9825c72ac0d7a37b3cdc565",
+      "folder": "lz4-1.10.0"
+    },
+    "zstd": {
+      "url": "https://codeload.github.com/facebook/zstd/zip/refs/tags/v1.5.7",
+      "sha256": "7897bc5d620580d9b7cd3539c44b59d78f3657d33663fe97a145e07b4ebd69a4",
+      "folder": "zstd-1.5.7"
+    },
+    "zlib": {
+      "url": "https://codeload.github.com/madler/zlib/zip/refs/tags/v1.3.1",
+      "sha256": "50b24b47bf19e1f35d2a21ff36d2a366638cdf958219a66f30ce0861201760e6",
+      "folder": "zlib-1.3.1"
+    }
+  },
+  "binaries": {
+    "baseline-pages.dll": {
+      "bytes": 58880,
+      "sha256": "29a523abec9cf6237a2edcfadabd6f53b21dc921bde0e9afae45524537fcf61d"
+    },
+    "baseline.dll": {
+      "bytes": 62976,
+      "sha256": "9512e72fbb7720d772fafe76ef4ed8705ba56feada1769503686a0748516029d"
+    }
+  }
+}

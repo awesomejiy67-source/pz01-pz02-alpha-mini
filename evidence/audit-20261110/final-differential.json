@@ -1,0 +1,7 @@
+{
+  "seed": 2685476902,
+  "source_cases": 4097,
+  "byte_identical_encodings": 40970,
+  "cross_decodes": 81940,
+  "status": "PASS"
+}

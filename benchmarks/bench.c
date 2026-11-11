@@ -26,7 +26,7 @@ int pz02_base_unpack(const uint8_t*,size_t,uint8_t*,unsigned,unsigned*);
 #define DEC_LOOPS 101
 #define BATCHES 5
 static volatile uint64_t sink = 0;
-static uint64_t now(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return (uint64_t)t.tv_sec*1000000000ull+t.tv_nsec;}
+#include "clock_ns.h"
 static uint16_t rd16(FILE *f){int a=fgetc(f),b=fgetc(f);if(a<0||b<0){fprintf(stderr,"short page header\n");exit(2);}return (uint16_t)(a|(b<<8));}
 static int cmp(const void *a,const void *b){const double x=*(const double*)a,y=*(const double*)b;return x<y?-1:x>y?1:0;}
 typedef struct {unsigned n;unsigned char raw[2048],packed[CAP],decoded[2048];size_t packed_len;unsigned raw_len;} Pg;

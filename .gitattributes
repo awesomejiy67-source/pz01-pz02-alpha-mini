@@ -1,0 +1,5 @@
+# Audit evidence hashes refer to exact recorded bytes on every checkout.
+evidence/audit-20261110/** -text whitespace=cr-at-eol
+# Imported licenses and the rejected patch are preserved as original evidence.
+evidence/audit-20261110/corpus-licenses/** -whitespace
+evidence/audit-20261110/*.patch -whitespace

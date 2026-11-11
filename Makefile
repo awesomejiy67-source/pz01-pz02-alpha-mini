@@ -32,6 +32,10 @@ sanitize: | $(BUILD)
 
 	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer $(INCLUDES) $(SRC) tests/test_pza.c -o $(BUILD)/pza-sanitize
 	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/pza-sanitize
+	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer $(INCLUDES) $(SRC) tests/test_pza_transform_bounds.c -o $(BUILD)/pza-transform-sanitize
+	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/pza-transform-sanitize
+	$(CC) -O1 -g -std=c11 -fsanitize=address,undefined -fno-omit-frame-pointer $(INCLUDES) $(SRC) tests/test_page_wire_bounds.c -o $(BUILD)/page-wire-sanitize
+	ASAN_OPTIONS=detect_leaks=0:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ./$(BUILD)/page-wire-sanitize
 
 benchmark: | $(BUILD)
 	python3 tools/bench_pages.py $(BENCH_ARGS)
@@ -55,10 +59,18 @@ $(BUILD)/solid-native: experimental/native/solid_native.c src/predictor.c | $(BU
 	$(CC) $(CFLAGS) $^ -o $@ -lz -lcrypto
 
 .PHONY: test-pages test-host sanitize-host test-jury
-test-pages: $(BUILD)/test_codec $(BUILD)/test_pz03_page $(BUILD)/test_pza
+test-pages: $(BUILD)/test_codec $(BUILD)/test_pz03_page $(BUILD)/test_pza $(BUILD)/test_pza_transform_bounds $(BUILD)/test_page_wire_bounds
 	./$(BUILD)/test_codec
 	./$(BUILD)/test_pz03_page
 	./$(BUILD)/test_pza
+	./$(BUILD)/test_pza_transform_bounds
+	./$(BUILD)/test_page_wire_bounds
+
+$(BUILD)/test_pza_transform_bounds: $(SRC) tests/test_pza_transform_bounds.c | $(BUILD)
+	$(CC) $(CFLAGS) $(INCLUDES) $(SRC) tests/test_pza_transform_bounds.c -o $@
+
+$(BUILD)/test_page_wire_bounds: $(SRC) tests/test_page_wire_bounds.c | $(BUILD)
+	$(CC) $(CFLAGS) $(INCLUDES) $(SRC) tests/test_page_wire_bounds.c -o $@
 
 $(BUILD)/test_pza: $(SRC) tests/test_pza.c | $(BUILD)
 	$(CC) $(CFLAGS) $(INCLUDES) $(SRC) tests/test_pza.c -o $@

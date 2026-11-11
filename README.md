@@ -1,3 +1,5 @@
+Windows page audit (2026-11-10): [findings, measured changes and remaining host gaps](AUDIT-2026-11-10.md).
+
 Custom Atom code/pixel codec: [PZA-ASSETS.md](PZA-ASSETS.md),
 [measured results](PZA-REPORT.md). Native no-heap pages, reversible source/x86/BGRA
 profiles and an optional host file/frame tool; default solid profiles unchanged.

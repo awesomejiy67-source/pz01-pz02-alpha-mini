@@ -1,0 +1,37 @@
+{
+  "c_source": {
+    "raw_bytes": 7367,
+    "pages": 4,
+    "sha256": "2eeb867250cf2d68779eb8d2603c694607ae946addb8c34c2377dc83db8a6854"
+  },
+  "generated_c": {
+    "raw_bytes": 29180,
+    "pages": 15,
+    "sha256": "52636510c140d1a43982bed0b8c1acab4791d2216b98b7bee45041944de8a0c6"
+  },
+  "x86_calls": {
+    "raw_bytes": 60000,
+    "pages": 30,
+    "sha256": "051952428f73e2f6214dd66870268b765ef14922065578e312ddd7e8bb89e6a0"
+  },
+  "gradient_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "3e6bd9896aca366705bd3cc7dccd18a813dc58e10a3c3725e1381382440f136c"
+  },
+  "sensor_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "7ee06a7ee408d0db9b2fe5bec5acad5f1d41977d989d388317f5e65944e998df"
+  },
+  "noise_bgra": {
+    "raw_bytes": 61440,
+    "pages": 30,
+    "sha256": "7b9445be13146c244eb0b418901cad187face9d9e431938d35d36d6d6d01582d"
+  },
+  "png_bytes": {
+    "raw_bytes": 9487,
+    "pages": 5,
+    "sha256": "1679f6d98ab89b0479f884c58243354166638ec65b77912f44aeee3c607f24b8"
+  }
+}

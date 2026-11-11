@@ -1,0 +1,27 @@
+--- a/models/pz/pagezip.c
++++ b/models/pz/pagezip.c
+@@ -49,11 +49,14 @@
+  }
+  /* A proven one-symbol palette is already globally minimal for n>=3. */
+  if(count==1 && palette_len<n+16u)goto palette_mode;
++ /* The serialized LZ prefix can only grow. Once it exceeds an available
++    palette, further matching cannot win. Keep equal-size LZ tie behaviour. */
++ size_t limit=palette_len<n+16u?palette_len:n+16u;
+  uint16_t head[HASH_COUNT],chain[PAGE_BYTES];/* 6144 bytes scratch; no heap */
+  memset(head,0,sizeof(head));
+  unsigned at=0;size_t pos=16;
+  while(at<n){
+-  if(pos>=n+16u)goto raw;
++  if(pos>=limit)goto raw;
+   size_t flag_at=pos++;d[flag_at]=0;
+   for(unsigned bit=0;bit<8&&at<n;bit++){
+    unsigned best=0,bestoff=0;
+@@ -80,7 +83,7 @@
+    /* On run without previous match, encode first literal, then offset-1 match. */
+    if(kind==1 && take<=68){if(take>34)take=34;}
+    size_t needed=kind==0?1:kind==2?5:take>68?6:2;
+-   if(pos+needed>n+16u)goto raw;
++   if(pos+needed>limit)goto raw;
+    if(kind==0)d[pos++]=s[at];
+    else{
+     d[flag_at]|=(uint8_t)(1u<<bit);
